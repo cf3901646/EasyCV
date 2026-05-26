@@ -1,0 +1,25 @@
+# EasyCV Git Ignore Rules
+
+# 忽略系统与 IDE 临时文件
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# 忽略备份文件（保障本地安全，但不污染 GitHub 仓库）
+*.bak
+*.bak_*
+*.dirty_bak
+*.dirty_bak_*
+*.v*.*_stable
+*pre_ultimate*
+temp_clean.js
+README.txt
+
+# 可选：如果你选择“方案二”不上传中文字体，请取消下方一行的注释
+# harmonyos-sans.woff2

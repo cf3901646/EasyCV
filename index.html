@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极简简历生成器 - 实时排版与高容模版</title>
+    <!-- 引入 Google Fonts 高级无衬线英文字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Roboto:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <!-- 引入 FontAwesome 图标，提升 UI 质感 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧编辑与控制台面板 -->
+        <aside class="editor-sidebar no-print">
+            <header class="editor-header">
+                <div class="brand">
+                    <div class="brand-left">
+                        <i class="fa-solid fa-file-invoice-colored logo-icon"></i>
+                        <h1>EasyCV <span class="badge">AI Ready</span></h1>
+                    </div>
+                    <button id="theme-toggle-btn" class="theme-toggle-btn" title="切换深浅主题">
+                        <i class="fa-solid fa-sun"></i>
+                    </button>
+                </div>
+                <p class="subtitle">实时排版 • A4 极简高容量模板</p>
+            </header>
+
+            <!-- 导航标签：表单编辑 / 样式调节 / JSON 源码 (方便AI操控) -->
+            <nav class="editor-tabs">
+                <button class="tab-btn active" data-tab="content-tab">
+                    <i class="fa-solid fa-pen-to-square"></i> 内容编辑
+                </button>
+                <button class="tab-btn" data-tab="style-tab">
+                    <i class="fa-solid fa-sliders"></i> 排版样式
+                </button>
+                <button class="tab-btn" data-tab="json-tab">
+                    <i class="fa-solid fa-code"></i> JSON 源码
+                </button>
+            </nav>
+
+            <div class="tab-content-container">
+                <!-- 1. 内容编辑标签页 -->
+                <section class="tab-pane active" id="content-tab">
+                    <!-- 基本信息 -->
+                    <div class="accordion-item expanded" id="sec-basic">
+                        <div class="accordion-header" onclick="toggleAccordion('sec-basic')">
+                            <span><i class="fa-regular fa-user"></i> 基本信息</span>
+                            <i class="fa-solid fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="info-name">姓名</label>
+                                    <input type="text" id="info-name" data-bind="info.name" placeholder="张三">
+                                </div>
+                                <div class="form-group">
+                                    <label for="info-title">求职意向 / 岗位</label>
+                                    <input type="text" id="info-title" data-bind="info.title" placeholder="全栈开发工程师">
+                                </div>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="info-email">电子邮箱</label>
+                                    <input type="email" id="info-email" data-bind="info.email" placeholder="zhangsan@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="info-phone">联系电话</label>
+                                    <input type="text" id="info-phone" data-bind="info.phone" placeholder="138-8888-8888">
+                                </div>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="info-location">意向城市 / 居住地</label>
+                                    <input type="text" id="info-location" data-bind="info.location" placeholder="北京 / 深圳">
+                                </div>
+                                <div class="form-group">
+                                    <label for="info-github">GitHub 地址</label>
+                                    <input type="text" id="info-github" data-bind="info.github" placeholder="github.com/zhangsan">
+                                </div>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="info-blog">个人博客 / 作品集</label>
+                                    <input type="text" id="info-blog" data-bind="info.blog" placeholder="zhangsan.dev">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 个人简介 -->
+                    <div class="accordion-item" id="sec-summary">
+                        <div class="accordion-header" onclick="toggleAccordion('sec-summary')">
+                            <span><i class="fa-regular fa-address-card"></i> 个人简介</span>
+                            <i class="fa-solid fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label for="info-summary">专业总结（简明扼要，突出核心技术年限与显著成果）</label>
+                                <textarea id="info-summary" data-bind="info.summary" rows="3" placeholder="5年全栈开发经验，精通 React/Go，拥有大型分布式系统优化背景..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 专业技能 -->
+                    <div class="accordion-item" id="sec-skills">
+                        <div class="accordion-header" onclick="toggleAccordion('sec-skills')">
+                            <span><i class="fa-solid fa-wand-magic-sparkles"></i> 专业技能</span>
+                            <i class="fa-solid fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="skills-editor-desc">分类列出您的核心技能，每一行代表一个分类组，如“前端技术”、“后端服务”等：</div>
+                            <div id="skills-list-container" class="dynamic-list">
+                                <!-- 动态技能列表项 -->
+                            </div>
+                            <button class="btn btn-secondary add-btn" onclick="addSkillGroup()">
+                                <i class="fa-solid fa-plus"></i> 添加技能组
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 工作经历 -->
+                    <div class="accordion-item" id="sec-work">
+                        <div class="accordion-header" onclick="toggleAccordion('sec-work')">
+                            <span><i class="fa-solid fa-briefcase"></i> 工作经历</span>
+                            <i class="fa-solid fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div id="work-list-container" class="dynamic-list">
+                                <!-- 动态工作经历 -->
+                            </div>
+                            <button class="btn btn-secondary add-btn" onclick="addWorkExperience()">
+                                <i class="fa-solid fa-plus"></i> 添加工作经历
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 项目经历 -->
+                    <div class="accordion-item" id="sec-projects">
+                        <div class="accordion-header" onclick="toggleAccordion('sec-projects')">
+                            <span><i class="fa-solid fa-laptop-code"></i> 项目经历</span>
+                            <i class="fa-solid fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div id="project-list-container" class="dynamic-list">
+                                <!-- 动态项目经历 -->
+                            </div>
+                            <button class="btn btn-secondary add-btn" onclick="addProjectExperience()">
+                                <i class="fa-solid fa-plus"></i> 添加项目经历
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 教育背景 -->
+                    <div class="accordion-item" id="sec-education">
+                        <div class="accordion-header" onclick="toggleAccordion('sec-education')">
+                            <span><i class="fa-solid fa-graduation-cap"></i> 教育背景</span>
+                            <i class="fa-solid fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div id="education-list-container" class="dynamic-list">
+                                <!-- 动态教育背景 -->
+                            </div>
+                            <button class="btn btn-secondary add-btn" onclick="addEducation()">
+                                <i class="fa-solid fa-plus"></i> 添加教育经历
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 动态自定义板块 -->
+                    <div class="accordion-item" id="sec-custom">
+                        <div class="accordion-header" onclick="toggleAccordion('sec-custom')">
+                            <span><i class="fa-solid fa-circle-plus"></i> 自定义板块</span>
+                            <i class="fa-solid fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="accordion-body">
+                            <div id="custom-sections-container">
+                                <!-- 动态自定义板块渲染 -->
+                            </div>
+                            <div class="add-custom-section-bar">
+                                <input type="text" id="new-section-title" placeholder="如：开源项目、科研成果、语言能力">
+                                <button class="btn btn-primary" onclick="createCustomSection()">
+                                    <i class="fa-solid fa-folder-plus"></i> 新建板块
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. 排版样式调节标签页 -->
+                <section class="tab-pane" id="style-tab">
+                    <!-- 上下文感应警示条 -->
+                    <div id="context-alert-banner" class="no-print"></div>
+                    <!-- 模板选择 -->
+                    <div class="style-card">
+                        <h3><i class="fa-solid fa-cubes"></i> 简历模板切换</h3>
+                        <div class="template-selector-grid">
+                            <div class="template-option active" data-tpl="tpl-classic">
+                                <div class="tpl-preview classic-preview"></div>
+                                <span>商务经典 (单栏)</span>
+                            </div>
+                            <div class="template-option" data-tpl="tpl-split">
+                                <div class="tpl-preview split-preview"></div>
+                                <span>优雅侧边 (双栏)</span>
+                            </div>
+                            <div class="template-option" data-tpl="tpl-academic">
+                                <div class="tpl-preview academic-preview"></div>
+                                <span>学术极简 (居中)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 字体选择 -->
+                    <div class="style-card">
+                        <h3><i class="fa-solid fa-font"></i> 字体家族</h3>
+                        <div class="font-selector-grid">
+                            <button class="font-btn active" data-font="font-inter">
+                                <strong>Inter</strong>
+                            </button>
+                            <button class="font-btn" data-font="font-outfit">
+                                <strong>Outfit</strong>
+                            </button>
+                            <button class="font-btn" data-font="font-roboto">
+                                <strong>Roboto</strong>
+                            </button>
+                            <button class="font-btn" data-font="font-jetbrains">
+                                <strong>JetBrains</strong>
+                            </button>
+                            <button class="font-btn" data-font="font-notosanssc-offline">
+                                <strong>思源黑体</strong>
+                            </button>
+                            <button class="font-btn" data-font="font-harmonyos-offline">
+                                <strong>鸿蒙黑体</strong>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 配色设置 -->
+                    <div class="style-card">
+                        <h3><i class="fa-solid fa-palette"></i> 简历主题配色</h3>
+                        <div class="color-picker-row">
+                            <div class="preset-colors">
+                                <button class="color-dot active" style="background-color: #1e3a8a;" data-color="#1e3a8a" title="深海蓝"></button>
+                                <button class="color-dot" style="background-color: #334155;" data-color="#334155" title="石墨灰"></button>
+                                <button class="color-dot" style="background-color: #065f46;" data-color="#065f46" title="翡翠绿"></button>
+                                <button class="color-dot" style="background-color: #881337;" data-color="#881337" title="玫瑰红"></button>
+                                <button class="color-dot" style="background-color: #111827;" data-color="#111827" title="极简黑"></button>
+                            </div>
+                            <div class="custom-color-container">
+                                <label for="custom-accent-color">自定义配色</label>
+                                <input type="color" id="custom-accent-color" value="#1e3a8a">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 密度微调滑块 -->
+                    <div class="style-card">
+                        <h3><i class="fa-solid fa-maximize"></i> 页面密度微调</h3>
+                        <div id="density-sliders-container"></div>
+                    </div>
+
+                    <!-- 标题样式调节 -->
+                    <div class="style-card">
+                        <h3><i class="fa-solid fa-heading"></i> 标题样式调节</h3>
+                        <div id="title-sliders-container"></div>
+                    </div>
+                </section>
+
+                <!-- 3. JSON 源码编辑标签页 (专为 AI 及高阶用户定制) -->
+                <section class="tab-pane" id="json-tab">
+                    <!-- AI 极速助手卡片 -->
+                    <div class="ai-copilot-card no-print">
+                        <div class="ai-copilot-header" onclick="toggleAICopilot()">
+                            <span class="ai-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI 极速填报与润色助手</span>
+                            <i class="fa-solid fa-chevron-down ai-arrow" id="ai-copilot-arrow"></i>
+                        </div>
+                        <div class="ai-copilot-body" id="ai-copilot-body">
+                            <p class="ai-desc">想用 ChatGPT / Claude / DeepSeek 帮你自动重写、润色或填报简历？只需点击下方按钮，系统将自动打包当前的简历结构与 STAR 优化指令。把复制的提示词和您的个人经历发给任意 AI，它就会吐出符合标准的 JSON，您粘回下方即可瞬间渲染排版！</p>
+                            <button class="btn btn-ai-gradient" onclick="copyAIPromptToClipboard()">
+                                <i class="fa-solid fa-copy"></i> 一键复制 AI 专属 Prompt
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="json-editor-info">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>直接编辑下方的 JSON 数据模型，点击“应用修改”即可实现瞬间双向渲染。非常适合 AI 自动填报与精细调控。</span>
+                    </div>
+                    <div class="json-actions">
+                        <button class="btn btn-primary btn-sm" onclick="applyRawJSON()">
+                            <i class="fa-solid fa-circle-check"></i> 应用修改
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="copyJSONToClipboard()">
+                            <i class="fa-solid fa-copy"></i> 复制 JSON
+                        </button>
+                    </div>
+                    <textarea id="raw-json-textarea" class="code-editor" rows="24"></textarea>
+                </section>
+            </div>
+
+            <!-- 侧边栏底部：控制面板 -->
+            <footer class="editor-footer">
+                <div class="action-grid">
+                    <button class="btn btn-primary" onclick="exportToPDF()">
+                        <i class="fa-solid fa-print"></i> 导出 PDF / 打印
+                    </button>
+                    <button class="btn btn-secondary" id="btn-toggle-example" onclick="loadExampleData()">
+                        <i class="fa-solid fa-lightbulb"></i> 优质程序员示例
+                    </button>
+                </div>
+                <div class="action-grid secondary-actions">
+                    <button class="btn btn-secondary" onclick="downloadJSONFile()">
+                        <i class="fa-solid fa-download"></i> 导出备份
+                    </button>
+                    <button class="btn btn-secondary" onclick="triggerJSONUpload()">
+                        <i class="fa-solid fa-upload"></i> 导入备份
+                    </button>
+                    <input type="file" id="json-upload-input" accept=".json" style="display: none;" onchange="importJSONFile(event)">
+                </div>
+                <p class="footer-note">💡 导出提示：必须在打印设置中勾选“背景图形”，并将“边距”设置为“无”</p>
+            </footer>
+        </aside>
+
+        <!-- 侧边栏拖拽边缘调节器 -->
+        <div id="sidebar-resize-handle" class="resize-handle no-print"></div>
+
+        <!-- 右侧：A4 简历实时预览面板 -->
+        <main class="preview-container">
+            <!-- Glassmorphism 双方案视图切换器 -->
+            <div class="resume-view-switcher no-print">
+                <button class="view-switch-btn active" id="btn-view-user" onclick="switchScheme('A')">
+                    <i class="fa-solid fa-square-poll-horizontal"></i> 设计方案 A
+                </button>
+                <button class="view-switch-btn" id="btn-view-example" onclick="switchScheme('B')">
+                    <i class="fa-solid fa-palette"></i> 设计方案 B
+                </button>
+            </div>
+            <!-- 模拟真实的 A4 纸张 -->
+            <div id="resume-page" class="resume-sheet tpl-classic font-inter">
+                <!-- 跨板块悬停虚线发光指示器 (仅网页端，打印自隐) -->
+                <div id="resume-hover-indicator" class="no-print">
+                    <span id="resume-hover-badge"></span>
+                </div>
+                <!-- 实时渲染的简历 HTML -->
+                <div id="resume-render-target"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

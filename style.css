@@ -1,0 +1,2161 @@
+﻿/* ----------------------------------------------------
+   简历生成器核心样式表
+   特色：暗黑毛玻璃后台控制区 + 极致高保真A4纸张实时排版
+   ---------------------------------------------------- */
+:root {
+    /* 后台编辑器配色 (暗色毛玻璃风格) */
+    --edit-bg: #0b0f19; /* 加深为极其沉稳高贵的极夜黑 */
+    --edit-card: rgba(30, 41, 59, 0.65);
+    --edit-border: rgba(255, 255, 255, 0.08);
+    --edit-text: #f1f5f9; /* 提亮暗色文字 */
+    --edit-text-muted: #94a3b8;
+    --edit-accent: #38bdf8;
+    --edit-accent-hover: #0ea5e9;
+    --edit-input-bg: rgba(15, 23, 42, 0.7);
+    --dynamic-item-bg: rgba(15, 23, 42, 0.35); /* 经历列表子卡片背景 */
+    
+    /* 专为防止写死白色而引入的文字与底色自适应变量 */
+    --card-title: #ffffff;
+    --btn-strong-text: #ffffff;
+    --option-bg: rgba(15, 23, 42, 0.4);
+    --option-active-bg: rgba(59, 130, 246, 0.15);
+    --option-active-text: #ffffff;
+    --btn-secondary-bg: rgba(255, 255, 255, 0.06);
+    --btn-secondary-hover: rgba(255, 255, 255, 0.12);
+    
+    /* 选项卡及手风琴局部变量配准 */
+    --header-bg: rgba(30, 41, 59, 0.35);
+    --edit-text-hover: #ffffff;
+    --tab-hover-bg: rgba(255, 255, 255, 0.02);
+    --tab-active-bg: rgba(255, 255, 255, 0.04);
+    
+    /* 极致适配白天/暗黑模式的新增自适应变量 */
+    --tab-bg: rgba(15, 23, 42, 0.4);
+    --footer-bg: rgba(15, 23, 42, 0.85);
+    --slider-bg: rgba(15, 23, 42, 0.6);
+    --card-shadow: none;
+    --code-bg: #020617;
+    --code-text: #38bdf8;
+    --switcher-bg: rgba(15, 23, 42, 0.7);
+    --switcher-border: rgba(255, 255, 255, 0.08);
+    
+    /* PDF指引弹窗自适应暗色默认变量 */
+    --modal-overlay-bg: rgba(2, 6, 23, 0.75);
+    --modal-bg: rgba(30, 41, 59, 0.85);
+    --modal-border: rgba(255, 255, 255, 0.08);
+    --modal-text: #cbd5e1;
+    --modal-text-muted: #94a3b8;
+    --modal-title: #ffffff;
+    
+    --step-card-bg: rgba(15, 23, 42, 0.45);
+    --step-card-border: rgba(255, 255, 255, 0.05);
+    
+    --tip-banner-bg: rgba(245, 158, 11, 0.08);
+    --tip-banner-border: rgba(245, 158, 11, 0.15);
+    --tip-banner-text: #fef08a;
+    
+    /* 右侧画布背景 */
+    --canvas-bg: #1e293b;
+    --sheet-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+/* 浅色明亮主题 (白天模式) 变量重载 - 殿堂级重构，确保无阻碍高对比度视觉体验 */
+.light-theme {
+    --edit-bg: #f1f5f9; /* 升级为 Slate 100 温润高贵的冷灰底色，与纯白卡片形成极其鲜明的对比度！ */
+    --edit-card: #ffffff; /* 纯白卡片背景 */
+    --edit-border: rgba(148, 163, 184, 0.35); /* 提亮边框对比度，使其清爽可见 */
+    --edit-text: #1e293b; /* Slate 800 深邃的墨黑色，舒缓好读 */
+    --edit-text-muted: #475569; /* Slate 600 灰色字，保证极高清晰度 */
+    --edit-accent: #0284c7; /* 深海宝蓝色白天主色调 */
+    --edit-accent-hover: #0369a1;
+    --edit-input-bg: #f8fafc; /* 输入框采用 Slate 50 极其干净的极浅冷灰，对比鲜明 */
+    --dynamic-item-bg: #f8fafc; /* 子经历项卡片背景 */
+    
+    /* 文字与底色自适应变量白天重载 */
+    --card-title: #0f172a; /* 黑色卡片标题 */
+    --btn-strong-text: #1e293b; 
+    --option-bg: #e2e8f0; 
+    --option-active-bg: rgba(2, 132, 199, 0.08); 
+    --option-active-text: #0284c7; 
+    --btn-secondary-bg: #e2e8f0; 
+    --btn-secondary-hover: #cbd5e1; 
+    
+    /* 选项卡及手风琴白天自适应 */
+    --header-bg: rgba(148, 163, 184, 0.08);
+    --edit-text-hover: #0284c7;
+    --tab-hover-bg: rgba(2, 132, 199, 0.03);
+    --tab-active-bg: rgba(2, 132, 199, 0.06);
+    
+    /* 极致适配白天/暗黑模式的新增自适应变量白天重载 */
+    --tab-bg: #e2e8f0; /* Slate 200 Tab栏背景 */
+    --footer-bg: rgba(241, 245, 249, 0.95); /* 底部控制台背景 */
+    --slider-bg: #cbd5e1; /* Slate 300 轨道背景 */
+    --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 8px -1px rgba(15, 23, 42, 0.03);
+    --code-bg: #f1f5f9;
+    --code-text: #0284c7;
+    --switcher-bg: rgba(255, 255, 255, 0.95);
+    --switcher-border: rgba(148, 163, 184, 0.2);
+    
+    /* PDF指引弹窗自适应白天浅色重载 */
+    --modal-overlay-bg: rgba(15, 23, 42, 0.45);
+    --modal-bg: rgba(255, 255, 255, 0.98);
+    --modal-border: rgba(148, 163, 184, 0.25);
+    --modal-text: #334155;
+    --modal-text-muted: #64748b;
+    --modal-title: #0f172a;
+    
+    --step-card-bg: rgba(241, 245, 249, 0.65);
+    --step-card-border: rgba(148, 163, 184, 0.15);
+    
+    --tip-banner-bg: rgba(245, 158, 11, 0.06);
+    --tip-banner-border: rgba(245, 158, 11, 0.12);
+    --tip-banner-text: #b45309;
+    
+    /* 右侧画布背景 (高贵的工作台浅冷灰底色) */
+    --canvas-bg: #cbd5e1;
+    --sheet-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+}
+
+
+:root {
+    /* A4 简历排版默认 CSS 变量 (通过 JS 实时修改) */
+    --accent-color: #1e3a8a; /* 默认主色调：深海蓝 */
+    --base-font-size: 10.5px;
+    --line-height: 1.45;
+    --title-size: 1.15em;
+    --title-weight: 700;
+    
+    --page-padding-y: 18mm;
+    --page-padding-x: 18mm;
+    
+    --section-margin: 16px;
+    --item-margin: 8px;
+    
+    --font-family: 'Inter', 'Noto Sans SC', sans-serif;
+}
+
+/* 基础重置 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ====================================================
+   极强抗震布局重置 - 确保编辑器完美贴边顶天立地，绝不漏缝
+   ==================================================== */
+html, 
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--canvas-bg);
+    color: var(--edit-text);
+}
+
+/* 主容器布局 */
+.app-container {
+    display: flex !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+
+/* ====================================================
+   左侧：后台控制面板样式 (no-print)
+   ==================================================== */
+.editor-sidebar {
+    width: 480px; /* 默认宽度，后续通过 JS 自适应调节 */
+    min-width: 320px; /* 设定拖拽拉伸的安全最小宽度 */
+    max-width: 60vw; /* 设定拖拽拉伸的安全最大宽度 */
+    background-color: var(--edit-bg);
+    border-right: 1px solid var(--edit-border);
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    z-index: 10;
+    box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+}
+
+/* 页头 - 极致精简化重塑，腾出最大垂直净高以拔高编辑区域操作效率 */
+.editor-header {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--edit-border);
+}
+.editor-header .logo-icon {
+    font-size: 1.3rem;
+    color: var(--edit-accent);
+}
+.editor-header h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--modal-title, #fff);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.editor-header .badge {
+    font-size: 0.6rem;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.editor-header .subtitle {
+    display: none; /* 彻底移除无实际增益的副标题，将页头纵向空间压缩60%，大幅狂飙生产力！ */
+}
+
+/* 导航标签页 */
+.editor-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--edit-border);
+    background-color: var(--tab-bg);
+}
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--edit-text-muted);
+    padding: 12px 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.tab-btn:hover {
+    color: var(--edit-text-hover);
+    background-color: var(--tab-hover-bg);
+}
+.tab-btn.active {
+    color: var(--edit-accent);
+    border-bottom-color: var(--edit-accent);
+    background-color: var(--tab-active-bg);
+}
+
+/* 标签内容容器 */
+.tab-content-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+/* 自定义滚动条 */
+.tab-content-container::-webkit-scrollbar {
+    width: 6px;
+}
+.tab-content-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+.tab-content-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+}
+.tab-content-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+    display: block;
+}
+
+/* 折叠面板 (Accordion) 样式 */
+.accordion-item {
+    background-color: var(--edit-card);
+    border: 1px solid var(--edit-border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.accordion-item:hover {
+    border-color: var(--edit-accent);
+}
+.accordion-header {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    color: var(--edit-text);
+    background-color: var(--header-bg);
+}
+.accordion-header i.arrow {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+    color: var(--edit-text-muted);
+}
+.accordion-item.expanded .accordion-header i.arrow {
+    transform: rotate(180deg);
+}
+.accordion-body {
+    padding: 18px;
+    display: none;
+    border-top: 1px solid var(--edit-border);
+}
+.accordion-item.expanded .accordion-body {
+    display: block;
+}
+
+/* 表单组件 */
+.form-group-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.form-group-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+.form-group {
+    margin-bottom: 12px;
+}
+.form-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--edit-text-muted);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+.form-group input[type="text"],
+.form-group input[type="email"] {
+    width: 100%;
+    background-color: var(--edit-input-bg);
+    border: 1px solid var(--edit-border);
+    border-radius: 6px;
+    color: var(--edit-text); /* 彻底修复白天模式下打字显示为白色而隐形的问题 */
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.form-group textarea {
+    width: 100%;
+    background-color: var(--edit-input-bg);
+    border: 1px solid var(--edit-border);
+    border-radius: 6px;
+    color: var(--edit-text);
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* 移除高度高度过渡以防止动态撑开时发生高度闪烁 */
+    resize: none;
+    overflow-y: hidden;
+    min-height: 80px;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--edit-accent) !important;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important; /* 提亮为与高贵宝蓝契合的柔和高光 */
+}
+
+/* 按钮系统 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+.btn-primary {
+    background-color: var(--edit-accent);
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: var(--edit-accent-hover);
+    transform: translateY(-1px);
+}
+.btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--edit-text);
+    border: 1px solid var(--edit-border);
+}
+.btn-secondary:hover {
+    background-color: var(--btn-secondary-hover);
+}
+.btn-danger {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.btn-danger:hover {
+    background-color: rgba(239, 68, 68, 0.3);
+}
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+.add-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+/* 动态列表项编辑器容器 */
+.dynamic-list-item {
+    background-color: var(--dynamic-item-bg);
+    border: 1px solid var(--edit-border);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+/* 自定义板块容器，支持深浅色自适应 */
+.custom-section-editor-box {
+    border: 1px dashed var(--edit-border);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background-color: var(--dynamic-item-bg);
+}
+.item-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed var(--edit-border);
+    padding-bottom: 8px;
+}
+.item-index-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--edit-accent);
+}
+.item-btns {
+    display: flex;
+    gap: 6px;
+}
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--edit-text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.icon-btn:hover {
+    color: #fff;
+    background-color: rgba(255,255,255,0.08);
+}
+.icon-btn.delete-icon:hover {
+    color: #ef4444;
+    background-color: rgba(239,68,68,0.1);
+}
+
+.skills-editor-desc {
+    font-size: 0.75rem;
+    color: var(--edit-text-muted);
+    margin-bottom: 10px;
+}
+
+/* 自定义板块管理器 */
+.add-custom-section-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--edit-border);
+}
+.add-custom-section-bar input {
+    flex: 1;
+    background-color: var(--edit-input-bg);
+    border: 1px solid var(--edit-border);
+    border-radius: 6px;
+    color: #fff;
+    padding: 8px;
+    font-size: 0.8rem;
+}
+
+/* ====================================================
+   排版样式调节 Tab 样式
+   ==================================================== */
+.style-card {
+    background-color: var(--edit-card);
+    border: 1px solid var(--edit-border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--card-shadow);
+}
+.style-card h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--card-title);
+    border-left: 3px solid var(--edit-accent);
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 模板选择卡片网格 */
+.template-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.template-option {
+    border: 2px solid var(--edit-border);
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    background-color: var(--option-bg);
+}
+.template-option span {
+    font-size: 0.7rem;
+    font-weight: 500;
+    display: block;
+    margin-top: 6px;
+    color: var(--edit-text-muted);
+}
+.template-option:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.template-option.active {
+    border-color: var(--edit-accent);
+    background-color: var(--option-active-bg);
+}
+.template-option.active span {
+    color: var(--option-active-text);
+}
+/* 模板小图预览 */
+.tpl-preview {
+    height: 48px;
+    border-radius: 4px;
+    background-color: #e2e8f0;
+    position: relative;
+    overflow: hidden;
+}
+.classic-preview::before {
+    content: '';
+    position: absolute;
+    top: 5px; left: 5px; right: 5px; height: 4px; background-color: #1e3a8a;
+}
+.classic-preview::after {
+    content: '';
+    position: absolute;
+    top: 14px; left: 5px; right: 5px; bottom: 5px;
+    background: repeating-linear-gradient(#94a3b8, #94a3b8 2px, transparent 2px, transparent 6px);
+}
+.split-preview::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0; width: 33%; background-color: #cbd5e1;
+}
+.split-preview::after {
+    content: '';
+    position: absolute;
+    top: 5px; left: 38%; right: 5px; bottom: 5px;
+    background: repeating-linear-gradient(#94a3b8, #94a3b8 2px, transparent 2px, transparent 6px);
+}
+.academic-preview::before {
+    content: '';
+    position: absolute;
+    top: 5px; left: 25%; right: 25%; height: 4px; background-color: #475569;
+}
+.academic-preview::after {
+    content: '';
+    position: absolute;
+    top: 14px; left: 5px; right: 5px; bottom: 5px;
+    background: repeating-linear-gradient(#94a3b8, #94a3b8 2px, transparent 2px, transparent 7px);
+}
+
+/* 字体选择网格 */
+.font-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.font-btn {
+    background-color: var(--option-bg);
+    border: 1px solid var(--edit-border);
+    color: var(--edit-text-muted);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.font-btn strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--btn-strong-text);
+    margin-bottom: 2px;
+}
+.font-btn:hover {
+    border-color: rgba(255,255,255,0.15);
+}
+.font-btn.active {
+    border-color: var(--edit-accent);
+    background-color: var(--option-active-bg);
+    box-shadow: 0 0 8px rgba(59,130,246,0.15);
+}
+.font-btn.active strong {
+    color: var(--option-active-text);
+}
+
+/* 颜色选择器 */
+.color-picker-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.preset-colors {
+    display: flex;
+    gap: 8px;
+}
+.color-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.color-dot:hover {
+    transform: scale(1.15);
+}
+.color-dot.active {
+    border-color: #fff;
+    transform: scale(1.1);
+}
+.custom-color-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.custom-color-container label {
+    font-size: 0.75rem;
+    color: var(--edit-text-muted);
+}
+.custom-color-container input[type="color"] {
+    -webkit-appearance: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    background: none;
+}
+.custom-color-container input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+.custom-color-container input[type="color"]::-webkit-color-swatch {
+    border: 1px solid var(--edit-border);
+    border-radius: 6px;
+}
+
+/* 排版滑块控制 */
+.control-slider {
+    margin-bottom: 14px;
+}
+.slider-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--edit-text-muted);
+    margin-bottom: 5px;
+}
+.slider-info .val-display {
+    color: #fff;
+    font-weight: 600;
+}
+
+#slide-font-size {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 12.5%, rgba(251, 191, 36, 0.35) 12.5%, rgba(251, 191, 36, 0.35) 37.5%, rgba(15, 23, 42, 0.6) 37.5%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-line-height {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 33.3%, rgba(251, 191, 36, 0.35) 33.3%, rgba(251, 191, 36, 0.35) 66.7%, rgba(15, 23, 42, 0.6) 66.7%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-margin-y {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 28%, rgba(251, 191, 36, 0.35) 28%, rgba(251, 191, 36, 0.35) 68%, rgba(15, 23, 42, 0.6) 68%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-margin-x {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 40%, rgba(251, 191, 36, 0.35) 40%, rgba(251, 191, 36, 0.35) 68%, rgba(15, 23, 42, 0.6) 68%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-sec-spacing {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 10%, rgba(251, 191, 36, 0.35) 10%, rgba(251, 191, 36, 0.35) 36.7%, rgba(15, 23, 42, 0.6) 36.7%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-item-spacing {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 4.3%, rgba(251, 191, 36, 0.35) 4.3%, rgba(251, 191, 36, 0.35) 26.1%, rgba(15, 23, 42, 0.6) 26.1%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-title-size {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 10%, rgba(251, 191, 36, 0.35) 10%, rgba(251, 191, 36, 0.35) 40%, rgba(15, 23, 42, 0.6) 40%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-title-weight {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 40%, rgba(251, 191, 36, 0.35) 40%, rgba(251, 191, 36, 0.35) 80%, rgba(15, 23, 42, 0.6) 80%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+
+.control-slider input[type="range"] {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    background-color: var(--edit-input-bg);
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+.control-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--edit-accent);
+    transition: background-color 0.2s, transform 0.1s;
+}
+.control-slider input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: #60a5fa;
+    transform: scale(1.2);
+}
+
+/* ====================================================
+   JSON 源码控制 Tab
+   ==================================================== */
+.json-editor-info {
+    background-color: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    color: #93c5fd;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+.json-editor-info i {
+    margin-top: 2px;
+}
+.json-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.code-editor {
+    width: 100%;
+    background-color: #020617;
+    border: 1px solid var(--edit-border);
+    border-radius: 6px;
+    color: #38bdf8;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    padding: 12px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.35;
+}
+.code-editor:focus {
+    border-color: var(--edit-accent);
+}
+
+/* 侧边栏底部固定控制台 */
+.editor-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--edit-border);
+    background-color: var(--footer-bg);
+    backdrop-filter: blur(10px);
+}
+.action-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.secondary-actions {
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 8px;
+}
+.secondary-actions .btn {
+    font-size: 0.7rem;
+    padding: 6px;
+}
+.footer-note {
+    font-size: 0.65rem;
+    color: var(--edit-text-muted);
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* ====================================================
+   右侧：A4 简历预览与渲染视口
+   ==================================================== */
+.preview-container {
+    flex: 1;
+    background-color: var(--canvas-bg);
+    overflow-y: auto;
+    overflow-x: hidden; /* 彻底隐形并抹除水平滚动条 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px 20px 40px;
+    position: relative;
+}
+/* 自定义右侧画布滚动条 */
+.preview-container::-webkit-scrollbar {
+    width: 8px;
+}
+.preview-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+}
+
+/* 真实的 A4 纸张尺寸模拟 */
+.resume-sheet {
+    background-color: #ffffff;
+    color: #1e293b;
+    width: 210mm;
+    min-height: 297mm;
+    box-shadow: var(--sheet-shadow);
+    padding: var(--page-padding-y) var(--page-padding-x);
+    font-size: var(--base-font-size);
+    line-height: var(--line-height);
+    font-family: var(--font-family);
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* A4 分页分割参考线提示（仅在Web预览显示，打印时自动隐藏） */
+.resume-sheet::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 297mm;
+    border-top: 1px dashed rgba(239, 68, 68, 0.4);
+    pointer-events: none;
+    z-index: 100;
+}
+.resume-sheet::before {
+    content: '第一页分页线';
+    position: absolute;
+    right: 15px;
+    top: calc(297mm - 18px);
+    font-size: 9px;
+    color: rgba(239, 68, 68, 0.6);
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* 字体绑定类 */
+.font-inter {
+    --font-family: 'Inter', 'Noto Sans SC', sans-serif;
+}
+.font-outfit {
+    --font-family: 'Outfit', 'Noto Sans SC', sans-serif;
+}
+.font-roboto {
+    --font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+}
+.font-jetbrains {
+    --font-family: 'JetBrains Mono', 'Noto Sans SC', monospace;
+}
+.font-notosanssc-offline {
+    --font-family: 'Noto Sans SC Offline', 'Noto Sans SC', sans-serif;
+}
+.font-harmonyos-offline {
+    --font-family: 'HarmonyOS Sans SC Offline', sans-serif;
+}
+
+
+/* ====================================================
+   三大简历排版模板通用样式
+   ==================================================== */
+.resume-sheet h2.sec-title {
+    font-size: var(--title-size, 1.15em);
+    font-weight: var(--title-weight, 700);
+    letter-spacing: 0.5px;
+    margin-bottom: calc(var(--item-margin) * 0.8);
+    display: flex;
+    align-items: center;
+    color: var(--accent-color);
+    position: relative; /* 锁死 ::after 绝对定位装饰条的位置，防止发生位置偏移漂移 */
+}
+
+.resume-section {
+    margin-bottom: var(--section-margin);
+    page-break-inside: avoid;
+}
+
+/* 清洁的基础列表项 */
+.resume-item {
+    margin-bottom: var(--item-margin);
+    page-break-inside: avoid;
+}
+.resume-item:last-child {
+    margin-bottom: 0;
+}
+
+/* 模块内容头部三列/两列结构 (如：公司/学校 - 岗位/学位 - 起止时间) */
+.item-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: 600;
+    font-size: 1.02em;
+    color: #0f172a;
+    margin-bottom: 3px;
+}
+.item-org {
+    font-weight: 700;
+}
+.item-role {
+    font-weight: 500;
+    color: #475569;
+}
+.item-time {
+    font-weight: 500;
+    color: #64748b;
+    font-size: 0.95em;
+}
+
+/* 项目子技术栈 */
+.item-tech-stack {
+    font-size: 0.95em;
+    color: #475569;
+    margin-bottom: 4px;
+    font-style: italic;
+}
+.item-tech-stack strong {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* 工作/项目细节列表（STAR原则描述） */
+.item-details-list {
+    list-style-type: disc;
+    list-style-position: inside; /* 方案 B：小黑点硬贴边 inside，保证 0px 极端值下黑点本身与上层标题完美左对齐 */
+    padding-left: 0;
+    margin-left: var(--list-indent, 15px); /* 支持由滑块变量驱动的可调节左缩进 */
+    color: #334155;
+    font-size: 0.98em;
+}
+.item-details-list li {
+    margin-bottom: 3px;
+}
+.item-details-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* 技能网格 */
+.skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.skills-group {
+    font-size: 0.98em;
+}
+.skills-group-title {
+    font-weight: 700;
+    color: #0f172a;
+    display: inline-block;
+    min-width: 80px;
+}
+.skills-group-tags {
+    color: #334155;
+}
+
+/* 个人信息 */
+.header-contact-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.95em;
+    color: #475569;
+}
+.header-contact-list span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.header-contact-list a {
+    color: #475569;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+.header-contact-list a:hover {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.summary-text {
+    font-size: 0.98em;
+    color: #334155;
+    white-space: pre-line;
+}
+
+
+/* ====================================================
+   模板 1：商务经典 (Classic Executive) - 纯单栏结构
+   ==================================================== */
+.tpl-classic .resume-header {
+    margin-bottom: calc(var(--section-margin) * 1.1);
+    border-bottom: 2.5px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+.tpl-classic .header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 8px;
+}
+.tpl-classic .header-name {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1;
+}
+.tpl-classic .header-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+.tpl-classic h2.sec-title {
+    border-bottom: 1.5px solid #cbd5e1;
+    padding-bottom: 3px;
+    margin-top: 5px;
+}
+.tpl-classic h2.sec-title::after {
+    /* 主色小色块装饰 */
+    content: '';
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--accent-color);
+    position: absolute;
+    bottom: -2px;
+}
+
+
+/* ====================================================
+   模板 2：优雅侧边 (Modern Split-Pane) - 左右双栏
+   ==================================================== */
+.tpl-split {
+    padding: 0 !important; /* 双栏自身使用独立内边距 */
+    display: flex;
+    flex-direction: column;
+    min-height: 297mm;
+    /* 采用殿堂级 Faux Columns 技巧：由父容器直接绘制 32.5% 宽度的浅灰色背景和 1px 垂直精细分割线，不管内容多少和字号大小，均确保侧边栏百分之百撑满到底 */
+    background: linear-gradient(to right, #f1f5f9 calc(32.5% - 1px), #e2e8f0 calc(32.5% - 1px), #e2e8f0 32.5%, #ffffff 32.5%) !important;
+}
+
+/* 双栏的主内容分栏网格容器 */
+.tpl-split .split-container {
+    display: grid;
+    grid-template-columns: 2.6fr 5.4fr;
+    flex: 1; /* 撑满剩余垂直空间 */
+    width: 100%;
+}
+
+/* 左侧栏（背景及右分割线已上移到父容器由 Faux Columns 完美承载） */
+.tpl-split .split-sidebar {
+    --base-font-size: var(--sidebar-font-size, 8.5px);
+    --section-margin: var(--sidebar-sec-spacing, 6px);
+    --item-margin: var(--sidebar-item-spacing, 2px);
+    --title-size: var(--sidebar-title-size, 1.05em);
+    --list-indent: var(--sidebar-list-indent, 10px); /* 局部重载左栏列表细节缩进 */
+    
+    font-size: var(--base-font-size); /* 必须显式应用字号，从而更新继承上下文计算值 */
+    padding: var(--page-padding-y) calc(var(--page-padding-x) * 0.9);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--section-margin) * 1.1);
+}
+.tpl-split .split-sidebar .resume-section {
+    margin-bottom: 0;
+}
+
+/* 右侧栏（主内容区） */
+.tpl-split .split-main {
+    --base-font-size: var(--main-font-size, 9.0px);
+    --section-margin: var(--main-sec-spacing, 6px);
+    --item-margin: var(--main-item-spacing, 2px);
+    --title-size: var(--main-title-size, 1.12em);
+    --list-indent: var(--main-list-indent, 15px); /* 局部重载右栏列表细节缩进 */
+    
+    font-size: var(--base-font-size); /* 必须显式应用字号，从而更新继承上下文计算值 */
+    padding: var(--page-padding-y) calc(var(--page-padding-x) * 1.1);
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-margin);
+}
+.tpl-split .split-main .resume-section {
+    margin-bottom: 0;
+}
+
+/* 页头（双栏下横跨顶部，极为舒展大气） */
+.tpl-split .resume-header {
+    padding: calc(var(--page-padding-y) * 1.1) var(--page-padding-x) calc(var(--page-padding-y) * 0.7);
+    border-bottom: 3.5px solid var(--accent-color);
+    background-color: #ffffff;
+}
+.tpl-split .header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 6px;
+}
+.tpl-split .header-name {
+    font-size: 2.1em;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1;
+}
+.tpl-split .header-title {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+.tpl-split .header-contact-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 0.95em;
+    color: #475569;
+    margin-top: 8px;
+}
+
+/* 双栏下的标题 */
+.tpl-split h2.sec-title {
+    border-bottom: 1.5px solid #cbd5e1;
+    padding-bottom: 4px;
+}
+.tpl-split .split-sidebar h2.sec-title {
+    border-bottom-color: #cbd5e1;
+}
+
+/* 侧边栏的列表紧凑化 */
+.tpl-split .split-sidebar .resume-item {
+    margin-bottom: calc(var(--item-margin) * 0.9);
+}
+.tpl-split .split-sidebar .item-meta-row {
+    flex-direction: column;
+    gap: 1px;
+}
+.tpl-split .split-sidebar .item-time {
+    font-size: 0.9em;
+}
+
+
+/* ====================================================
+   模板 3：学术极简 (Minimalist Academic) - 居中对称
+   ==================================================== */
+.tpl-academic .resume-header {
+    text-align: center;
+    margin-bottom: calc(var(--section-margin) * 1.1);
+}
+.tpl-academic .header-name {
+    font-size: 2.3em;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.tpl-academic .header-title {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 8px;
+}
+.tpl-academic .header-contact-list {
+    justify-content: center;
+    gap: 15px;
+}
+.tpl-academic h2.sec-title {
+    justify-content: center;
+    border-bottom: 1px double #94a3b8;
+    padding-bottom: 3px;
+    margin-top: 6px;
+}
+
+
+/* ====================================================
+   PDF 打印专用媒体查询 - @media print
+   ==================================================== */
+@media print {
+    /* 1. 强力隐藏全部多余的操作面板及底色 */
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        overflow: visible !important;
+        height: auto !important;
+    }
+    
+    .no-print,
+    .editor-sidebar,
+    .app-container::before {
+        display: none !important;
+    }
+    
+    .app-container {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .preview-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        display: block !important;
+        background: none !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* 2. 完美的 A4 打印尺寸重置，抹去外阴影 */
+    .resume-sheet {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        box-shadow: none !important;
+        padding: var(--page-padding-y) var(--page-padding-x) !important;
+        margin: 0 auto !important;
+        background-color: #ffffff !important;
+        border: none !important;
+        page-break-after: always !important;
+        /* 强力抹除编辑器内联的 CSS transform 缩放，确保导出 PDF / 打印时恢复最无损的 100% 真实物理 A4 尺寸 */
+        transform: none !important;
+        transform-origin: initial !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* 隐藏分页参考线 */
+    .resume-sheet::after,
+    .resume-sheet::before {
+        display: none !important;
+    }
+
+    /* 双栏特有背景保留选项 */
+    .tpl-split {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 0 !important; /* 强制清空打印边距，确保 Faux Columns 背景及灰色侧边栏顶满 PDF 纸张边缘 */
+    }
+    .tpl-split .split-container {
+        display: grid !important;
+        grid-template-columns: 2.6fr 5.4fr !important;
+    }
+    .tpl-split .split-sidebar {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background-color: #f1f5f9 !important;
+    }
+
+    /* 3. 避免跨页断裂，确保经历板块保持完整 */
+    .resume-section {
+        page-break-inside: avoid !important;
+    }
+    .resume-item {
+        page-break-inside: avoid !important;
+    }
+    
+    }
+}
+
+/* 正在查看示例的黄金激活高亮按钮 */
+.btn-active-highlight {
+    background: linear-gradient(135deg, #fbbf24, #d97706) !important;
+    color: #fff !important;
+    border: 1px solid rgba(251, 191, 36, 0.3) !important;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.4) !important;
+}
+
+/* 高雅的玻璃拟物 Toast 提示框 */
+.toast-notification {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    z-index: 99999;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Glassmorphism 双卡槽视图切换器 - 高雅商务、极简微光自适应重塑 */
+.resume-view-switcher {
+    --view-switch-text: #94a3b8;
+    --view-switch-text-hover: #ffffff;
+    --view-switch-btn-hover-bg: rgba(255, 255, 255, 0.04);
+    
+    display: flex;
+    background: var(--switcher-bg, rgba(15, 23, 42, 0.7));
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--switcher-border, rgba(255, 255, 255, 0.08));
+    border-radius: 30px;
+    padding: 4px;
+    margin-bottom: 20px;
+    gap: 4px;
+    /* 引入高端 inset 0 1px 微光线，强化几何立体感，内部无溢出杂色 */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    z-index: 100;
+}
+.light-theme .resume-view-switcher {
+    --view-switch-text: #64748b;
+    --view-switch-text-hover: #0f172a;
+    --view-switch-btn-hover-bg: rgba(15, 23, 42, 0.04);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.view-switch-btn {
+    background: none;
+    border: none;
+    color: var(--view-switch-text);
+    padding: 8px 18px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 26px; /* 修正为 26px，契合同心圆黄金准则 (30px R_outer - 4px Padding)，消除圆角几何偏差！ */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.view-switch-btn:hover {
+    color: var(--view-switch-text-hover);
+    background: var(--view-switch-btn-hover-bg);
+    transform: translateY(-1px);
+}
+
+/* 设计方案 A (我的简历) 激活状态 - 经典科技暗夜蓝 (清除外溢阴影与硬边框) */
+#btn-view-user.active {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* 设计方案 B (示例简历) 激活状态 - 尊贵极客紫罗兰 (清除外溢阴影与硬边框) */
+#btn-view-example.active {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #581c87, #8b5cf6) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* 白天明亮模式下的 A 激活卡槽 - 高贵石墨宝蓝色 (清除外溢阴影与硬边框) */
+.light-theme #btn-view-user.active {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0284c7, #38bdf8) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* 白天明亮模式下的 B 激活卡槽 - 雅致丁香深紫色 (清除外溢阴影与硬边框) */
+.light-theme #btn-view-example.active {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #6d28d9, #a855f7) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* 左侧上下文提示 Banner */
+#context-alert-banner {
+    display: none; /* 默认隐藏，由 JS 动态决定显示 */
+    background: rgba(30, 41, 59, 0.65); /* 优雅石墨蓝底色 */
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.2); /* 精致微光边框 */
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    color: #f1f5f9; /* 高雅偏白色文字 */
+    line-height: 1.5;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    animation: slideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#context-alert-banner .banner-info-icon {
+    color: #38bdf8;
+    font-size: 1.1em;
+    margin-right: 6px;
+}
+#context-alert-banner .banner-highlight-text {
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+/* 白天明亮模式下的自适应样式，完美契合极简亮白界面 */
+.light-theme #context-alert-banner {
+    background: rgba(2, 132, 199, 0.05); /* 马卡龙浅天蓝背景，温润高级 */
+    border: 1px solid rgba(2, 132, 199, 0.15); /* 浅蓝色超细腻描边 */
+    color: #1e293b; /* 优雅深石墨灰，高可读性 */
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.03); /* 轻透投影 */
+}
+.light-theme #context-alert-banner .banner-info-icon {
+    color: #0284c7; /* 深蔚蓝色，确保优秀的视觉指引力 */
+}
+.light-theme #context-alert-banner .banner-highlight-text {
+    color: #0284c7; /* 高对比度高亮蓝 */
+    font-weight: 600;
+}
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 跨板块悬停虚线发光指示器 */
+#resume-hover-indicator {
+    position: absolute;
+    border: 2px dashed var(--accent-color);
+    background: rgba(59, 130, 246, 0.02);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.1), inset 0 0 8px rgba(59, 130, 246, 0.05);
+    border-radius: 6px;
+    pointer-events: none; /* 穿透鼠标，绝对不阻碍点选打字 */
+    display: none;
+    z-index: 999;
+    /* 极致丝滑的跨板块跟随磁吸动画 */
+    transition: top 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                left 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                width 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                height 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.15s ease,
+                border-color 0.2s;
+}
+
+/* 板块定位 Badge 标签 */
+#resume-hover-badge {
+    position: absolute;
+    top: -24px;
+    right: 4px;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    pointer-events: none;
+    animation: badgePop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: background-color 0.2s;
+}
+
+@keyframes badgePop {
+    from {
+        opacity: 0;
+        transform: scale(0.85) translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* 消灭原生 contenteditable 浏览器突兀的高亮黄色或蓝色边框 */
+[contenteditable="true"] {
+    outline: none;
+    position: relative;
+    border-radius: 2px;
+    transition: background-color 0.15s;
+}
+[contenteditable="true"]:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+    cursor: text;
+}
+[contenteditable="true"]:focus {
+    background-color: rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+/* 打印时强制清空任何悬停框与虚线 */
+@media print {
+    #resume-hover-indicator,
+    #resume-hover-badge,
+    .resume-view-switcher {
+        display: none !important;
+    }
+}
+
+/* 局部缩放比例浮动提示框样式 */
+.zoom-indicator-toast {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(10px);
+}
+.zoom-indicator-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* PDF 导出指南 Modal 极致毛玻璃与步骤指引设计 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--modal-overlay-bg);
+    backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-content {
+    background: var(--modal-bg);
+    border: 1px solid var(--modal-border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    width: 620px;
+    max-width: 90%;
+    padding: 26px;
+    color: var(--modal-text);
+    transform: scale(0.92) translateY(15px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay.active .modal-content {
+    transform: scale(1) translateY(0);
+}
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    padding-bottom: 14px;
+    position: relative;
+}
+.modal-header h2 {
+    font-size: 1.22rem;
+    font-weight: 700;
+    color: var(--modal-title);
+    margin: 0;
+}
+.pdf-icon {
+    font-size: 1.5rem;
+    color: #ef4444; /* 精致鲜红 */
+}
+.close-btn {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    background: none;
+    border: none;
+    color: var(--edit-text-muted);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.close-btn:hover {
+    color: var(--edit-text-hover);
+}
+.modal-body {
+    padding: 18px 0 22px;
+}
+.modal-intro {
+    font-size: 0.82rem;
+    color: var(--modal-text);
+    line-height: 1.55;
+    margin-bottom: 20px;
+}
+.guide-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.guide-step-card {
+    background: var(--step-card-bg);
+    border: 1px solid var(--step-card-border);
+    border-radius: 10px;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.2s;
+}
+.guide-step-card:hover {
+    border-color: rgba(96, 165, 250, 0.3);
+}
+.step-num {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--edit-accent); /* 动态适配主题主色 */
+    background: rgba(56, 189, 248, 0.1);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.step-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--modal-title);
+}
+.step-desc {
+    font-size: 0.72rem;
+    color: var(--modal-text-muted);
+    line-height: 1.45;
+}
+.guide-tip-banner {
+    background: var(--tip-banner-bg);
+    border: 1px solid var(--tip-banner-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    color: var(--tip-banner-text);
+    line-height: 1.45;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+.guide-tip-banner i {
+    margin-top: 2px;
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
+    padding-top: 16px;
+}
+.modal-footer .btn {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 8px;
+}
+.cancel-btn {
+    background: rgba(148, 163, 184, 0.1);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+}
+.cancel-btn:hover {
+    background: rgba(148, 163, 184, 0.15);
+    color: #fff;
+}
+.action-btn {
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+    color: #fff;
+}
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45);
+}
+
+/* 页头中的品牌行布局升级 */
+.editor-header .brand {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.brand-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 主题切换按钮尊贵设计 */
+.theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fde047; /* 太阳的亮黄色 */
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    outline: none;
+}
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    /* 彻底移除 scale 和 rotate 的动态晃动，保持极致稳重的高级感 */
+    color: #facc15;
+    box-shadow: 0 0 12px rgba(253, 224, 71, 0.2);
+}
+.light-theme .theme-toggle-btn {
+    background: rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    color: #64748b; /* 月亮的温润色 */
+    box-shadow: none;
+}
+.light-theme .theme-toggle-btn:hover {
+    background: rgba(15, 23, 42, 0.1);
+    /* 彻底移除 scale 和 rotate 的动态晃动，保持极致稳重的高级感 */
+    color: #0284c7;
+    box-shadow: 0 0 12px rgba(2, 132, 199, 0.15);
+}
+
+/* ====================================================
+   优雅侧边分栏：双并排调节滑块排版系统
+   ==================================================== */
+.control-sliders-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+.control-slider-col {
+    display: flex;
+    flex-direction: column;
+}
+.control-slider-col .slider-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--edit-text-muted);
+    margin-bottom: 5px;
+}
+.control-slider-col .slider-info .val-display {
+    color: #fff;
+    font-weight: 600;
+}
+.light-theme .control-slider-col .slider-info .val-display {
+    color: var(--edit-text);
+}
+
+.control-slider-col input[type="range"] {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    background-color: var(--edit-input-bg);
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+.control-slider-col input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--edit-accent);
+    transition: background-color 0.2s, transform 0.1s;
+}
+.control-slider-col input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: #60a5fa;
+    transform: scale(1.2);
+}
+
+/* 优雅侧边双栏左右分裂后，依然完美复用黄金区间推荐点渐变背景 */
+#slide-sidebar-font-size, #slide-main-font-size {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 12.5%, rgba(251, 191, 36, 0.35) 12.5%, rgba(251, 191, 36, 0.35) 37.5%, rgba(15, 23, 42, 0.6) 37.5%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-sidebar-sec-spacing, #slide-main-sec-spacing {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 10%, rgba(251, 191, 36, 0.35) 10%, rgba(251, 191, 36, 0.35) 36.7%, rgba(15, 23, 42, 0.6) 36.7%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-sidebar-item-spacing, #slide-main-item-spacing {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 4.3%, rgba(251, 191, 36, 0.35) 4.3%, rgba(251, 191, 36, 0.35) 26.1%, rgba(15, 23, 42, 0.6) 26.1%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-sidebar-title-size {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 14%, rgba(251, 191, 36, 0.35) 14%, rgba(251, 191, 36, 0.35) 43%, rgba(15, 23, 42, 0.6) 43%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-main-title-size {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 12.5%, rgba(251, 191, 36, 0.35) 12.5%, rgba(251, 191, 36, 0.35) 37.5%, rgba(15, 23, 42, 0.6) 37.5%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+
+/* 新增的列表缩进滑块默认暗黑极客模式背景 */
+#slide-list-indent {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 10%, rgba(251, 191, 36, 0.35) 10%, rgba(251, 191, 36, 0.35) 30%, rgba(15, 23, 42, 0.6) 30%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-sidebar-list-indent {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 10%, rgba(251, 191, 36, 0.35) 10%, rgba(251, 191, 36, 0.35) 25%, rgba(15, 23, 42, 0.6) 25%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+#slide-main-list-indent {
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.6) 12.5%, rgba(251, 191, 36, 0.35) 12.5%, rgba(251, 191, 36, 0.35) 30%, rgba(15, 23, 42, 0.6) 30%, rgba(15, 23, 42, 0.6) 100%) !important;
+}
+
+/* 在白天明亮模式下，滑块的渐变背景进行极致对比度自适应重载，杜绝任何色差！ */
+.light-theme #slide-font-size, 
+.light-theme #slide-sidebar-font-size, 
+.light-theme #slide-main-font-size {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 12.5%, rgba(245, 158, 11, 0.25) 12.5%, rgba(245, 158, 11, 0.25) 37.5%, #cbd5e1 37.5%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-line-height {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 33.3%, rgba(245, 158, 11, 0.25) 33.3%, rgba(245, 158, 11, 0.25) 66.7%, #cbd5e1 66.7%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-margin-y {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 28%, rgba(245, 158, 11, 0.25) 28%, rgba(245, 158, 11, 0.25) 68%, #cbd5e1 68%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-margin-x {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 40%, rgba(245, 158, 11, 0.25) 40%, rgba(245, 158, 11, 0.25) 52%, #cbd5e1 52%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-sec-spacing, 
+.light-theme #slide-sidebar-sec-spacing, 
+.light-theme #slide-main-sec-spacing {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 10%, rgba(245, 158, 11, 0.25) 10%, rgba(245, 158, 11, 0.25) 36.7%, #cbd5e1 36.7%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-item-spacing, 
+.light-theme #slide-sidebar-item-spacing, 
+.light-theme #slide-main-item-spacing {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 4.3%, rgba(245, 158, 11, 0.25) 4.3%, rgba(245, 158, 11, 0.25) 26.1%, #cbd5e1 26.1%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-list-indent {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 10%, rgba(245, 158, 11, 0.25) 10%, rgba(245, 158, 11, 0.25) 30%, #cbd5e1 30%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-sidebar-list-indent {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 10%, rgba(245, 158, 11, 0.25) 10%, rgba(245, 158, 11, 0.25) 25%, #cbd5e1 25%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-main-list-indent {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 12.5%, rgba(245, 158, 11, 0.25) 12.5%, rgba(245, 158, 11, 0.25) 30%, #cbd5e1 30%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-title-size, 
+.light-theme #slide-sidebar-title-size, 
+.light-theme #slide-main-title-size {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 14%, rgba(245, 158, 11, 0.25) 14%, rgba(245, 158, 11, 0.25) 16%, #cbd5e1 16%, #cbd5e1 100%) !important;
+}
+.light-theme #slide-title-weight {
+    background: linear-gradient(to right, #cbd5e1 0%, #cbd5e1 78%, rgba(245, 158, 11, 0.25) 78%, rgba(245, 158, 11, 0.25) 82%, #cbd5e1 82%, #cbd5e1 100%) !important;
+}
+
+/* ====================================================
+   文字加粗悬浮工具气泡 (Bold Popover) 样式
+   ==================================================== */
+.bold-popover {
+    position: absolute; /* 修改为 absolute，相对于 document.body 能够自适应滚动 */
+    z-index: 9999;
+    background: rgba(30, 41, 59, 0.9); /* 默认暗色毛玻璃 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transform: translateY(6px) scale(0.95);
+    transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.bold-popover.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* 白天模式重载 */
+.light-theme .bold-popover {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+}
+
+/* 按钮样式 */
+.bold-popover-btn {
+    background: none;
+    border: none;
+    color: var(--edit-text);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.bold-popover-btn:hover {
+    background-color: var(--btn-secondary-hover);
+    color: var(--edit-accent);
+}
+
+/* 气泡下方的微小箭头 */
+.bold-popover::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: rgba(30, 41, 59, 0.9) transparent transparent;
+    display: block;
+    width: 0;
+}
+
+.light-theme .bold-popover::after {
+    border-color: rgba(255, 255, 255, 0.95) transparent transparent;
+}
+
+/* ====================================================
+   侧边栏拖拽边缘调节器 (Resize Handle) 样式
+   ==================================================== */
+.resize-handle {
+    width: 6px;
+    cursor: col-resize;
+    background-color: var(--edit-border);
+    position: relative;
+    z-index: 20;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.resize-handle:hover, 
+.resize-handle.active {
+    background-color: var(--edit-accent);
+}
+
+/* 拖动条物理凹槽虚线指示 */
+.resize-handle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 1px;
+    transition: background-color 0.2s ease;
+}
+
+.light-theme .resize-handle::before {
+    background-color: rgba(15, 23, 42, 0.15);
+}
+
+.resize-handle:hover::before, 
+.resize-handle.active::before {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.light-theme .resize-handle:hover::before, 
+.light-theme .resize-handle.active::before {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* ====================================================
+   AI 极客助手 (AI Copilot Card) 样式
+   ==================================================== */
+.ai-copilot-card {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.15) 0%, rgba(15, 23, 42, 0.6) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.05);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ai-copilot-card:hover {
+    border-color: rgba(168, 85, 247, 0.45);
+    box-shadow: 0 4px 25px rgba(168, 85, 247, 0.1);
+}
+
+.ai-copilot-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    background-color: rgba(168, 85, 247, 0.08);
+}
+
+.ai-copilot-header .ai-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #c084fc;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-copilot-header .ai-arrow {
+    font-size: 0.75rem;
+    color: #c084fc;
+    transition: transform 0.3s ease;
+}
+
+.ai-copilot-card.expanded .ai-arrow {
+    transform: rotate(180deg);
+}
+
+.ai-copilot-body {
+    padding: 16px;
+    display: none;
+    border-top: 1px solid rgba(168, 85, 247, 0.15);
+}
+
+.ai-copilot-card.expanded .ai-copilot-body {
+    display: block;
+}
+
+.ai-desc {
+    font-size: 0.75rem;
+    color: var(--edit-text-muted);
+    line-height: 1.45;
+    margin-bottom: 12px;
+}
+
+/* AI 专属紫色霓虹渐变按钮 */
+.btn-ai-gradient {
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    color: #fff !important;
+    width: 100%;
+    padding: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
+    transition: all 0.2s ease;
+}
+
+.btn-ai-gradient:hover {
+    background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+}
+
+/* 白天模式重载 */
+.light-theme .ai-copilot-card {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, #ffffff 100%);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.03);
+}
+
+.light-theme .ai-copilot-header {
+    background-color: rgba(168, 85, 247, 0.03);
+}
+
+.light-theme .ai-copilot-header .ai-title,
+.light-theme .ai-copilot-header .ai-arrow {
+    color: #7c3aed;
+}
+
+/* 白天明亮模式下的 JSON 源码模块自适应重写 */
+.light-theme .json-editor-info {
+    background-color: rgba(2, 132, 199, 0.05); /* 柔和浅天蓝色底 */
+    border: 1px solid rgba(2, 132, 199, 0.15); /* 淡蓝细边框 */
+    color: #334155; /* 优雅深灰文字，清晰不伤眼 */
+}
+.light-theme .json-editor-info i {
+    color: #0284c7; /* 深蔚蓝色指示图标 */
+}
+
+.light-theme .code-editor {
+    background-color: #f8fafc; /* 极致干净优雅的浅石墨蓝灰底色 */
+    border: 1px solid #cbd5e1; /* 柔灰边框，契合白色编辑面板 */
+    color: #0f172a; /* 极高对比度的深石墨蓝黑代码字，绝不隐形 */
+}
+.light-theme .code-editor:focus {
+    border-color: var(--edit-accent) !important;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important; /* 优雅聚焦高亮环 */
+}
+
+/* ====================================================
+   PPT 级排版平滑动效 (FLIP Typography Morph) 性能优化
+   ==================================================== */
+.selectable-section, 
+.resume-header, 
+.resume-section, 
+.resume-item {
+    will-change: transform, opacity;
+}
+
+/* ====================================================
+   100% 完全开源免费商用中文字体本地物理离线内置声明 (@font-face)
+   ==================================================== */
+@font-face {
+    font-family: 'Noto Sans SC Offline';
+    src: url('NotoSansSC-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'HarmonyOS Sans SC Offline';
+    src: url('harmonyos-sans.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+
+
