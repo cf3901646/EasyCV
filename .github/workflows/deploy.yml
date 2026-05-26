@@ -1,0 +1,43 @@
+# EasyCV GitHub Pages 自动部署流水线
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["master"] # 当有代码推送到 master 分支时触发
+
+  # 允许手动触发部署
+  workflow_dispatch:
+
+# 设置 GITHUB_TOKEN 权限以允许部署到 GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 限制同一时间只有一个部署在运行，防止冲突
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 上传项目根目录下的所有静态资源（index.html, style.css, app.js, fonts等）
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
