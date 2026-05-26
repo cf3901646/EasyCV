@@ -6,7 +6,7 @@ on:
     branches: ["master"] # 当有代码推送到 master 分支时触发
 
   # 允许手动触发部署
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 # 设置 GITHUB_TOKEN 权限以允许部署到 GitHub Pages
 permissions:
