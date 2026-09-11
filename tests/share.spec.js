@@ -128,7 +128,8 @@ test('share dialog copies snapshot, falls back to manual selection and fits mobi
     await page.keyboard.press('Escape');
     await page.locator('#theme-toggle-btn').click();
     await page.setViewportSize({width:390,height:844});
-    await page.locator('[data-share-resume]').first().click();
+    await page.locator('#mobile-tools-trigger').click();
+    await page.locator('#mobile-tools-dialog [data-share-resume]').click();
     await expect(page.locator('#copy-share-link')).toBeEnabled();
     const bounds = await page.locator('#share-dialog').boundingBox();
     expect(bounds.x).toBeGreaterThanOrEqual(0);
@@ -147,6 +148,12 @@ test('opening a hash link in the existing tab loads the snapshot and supports mo
     await page.goto(url);
     await expect(page.locator('.header-name')).toHaveText('同页链接');
     await expect(page.locator('body')).toHaveClass(/mobile-preview/);
+    await page.setViewportSize({width:320,height:844});
+    const header = await page.locator('.mobile-header').boundingBox();
+    const save = await page.locator('.mobile-header #save-status').boundingBox();
+    expect(save.y + save.height).toBeLessThanOrEqual(header.y + header.height);
+    await expect(page.locator('#mobile-tools-trigger')).toBeInViewport();
+    await page.setViewportSize({width:390,height:844});
     const bounds = await page.locator('#resume-page').boundingBox();
     expect(bounds.x + bounds.width).toBeLessThanOrEqual(390);
     await page.locator('[data-workspace-view="edit"]').click();

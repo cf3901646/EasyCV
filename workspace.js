@@ -79,14 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = html ? sanitizeHTMLKeepBold(html) : event.clipboardData.getData('text/plain');
         document.execCommand('insertHTML', false, formatResumeText(text));
     });
-    document.querySelectorAll('[data-workspace-view]').forEach(button => button.addEventListener('click', () => {
-        document.body.classList.toggle('mobile-preview', button.dataset.workspaceView === 'preview');
-        document.querySelectorAll('[data-workspace-view]').forEach(item => {
-            item.classList.toggle('active', item === button);
-            item.setAttribute('aria-pressed', String(item === button));
-        });
-        adjustPreviewScale();
-    }));
+    initMobileWorkspace();
     document.querySelectorAll('.accordion-body').forEach(body => {
         const inner = document.createElement('div');
         inner.className = 'accordion-inner';
@@ -119,3 +112,81 @@ document.addEventListener('DOMContentLoaded', () => {
         resizeFrame = requestAnimationFrame(adjustPreviewScale);
     }).observe(document.getElementById('resume-page'));
 });
+
+function initMobileWorkspace() {
+    const mobile = matchMedia('(max-width:760px)');
+    const body = document.body;
+    const footer = document.querySelector('.editor-footer');
+    const footerHome = document.createComment('Desktop footer position');
+    footer.before(footerHome);
+    const saveStatus = document.getElementById('save-status');
+    const saveHome = document.createComment('Desktop save status position');
+    saveStatus.before(saveHome);
+    const toolsDialog = document.getElementById('mobile-tools-dialog');
+    const toggle = document.getElementById('mobile-preview-toggle');
+    const titles = { 'content-tab':'内容', 'style-tab':'样式', 'layout-tab':'布局', 'json-tab':'JSON 与 AI 助手' };
+    let view = document.querySelector('.tab-btn.active').dataset.tab;
+    let collapsed = false, viewportFrame;
+
+    function syncView() {
+        const adjusting = view === 'style-tab' || view === 'layout-tab';
+        body.classList.toggle('mobile-preview', view === 'preview');
+        body.classList.toggle('mobile-split', adjusting && !collapsed);
+        document.getElementById('mobile-editor-title').textContent = titles[view] || '内容';
+        toggle.hidden = !adjusting;
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+        toggle.innerHTML = `${collapsed ? '展开' : '收起'}预览<i class="fa-solid fa-chevron-${collapsed ? 'down' : 'up'}" aria-hidden="true"></i>`;
+        document.querySelectorAll('.mobile-dock button').forEach(button => {
+            const selected = (button.dataset.mobileTab || button.dataset.workspaceView) === view;
+            button.setAttribute('aria-pressed', String(selected));
+        });
+        adjustPreviewScale();
+    }
+
+    document.querySelectorAll('[data-mobile-tab]').forEach(button => button.addEventListener('click', () => {
+        document.querySelector(`.editor-tabs [data-tab="${button.dataset.mobileTab}"]`).click();
+    }));
+    document.addEventListener('workspace-tab-change', event => { view = event.detail; syncView(); });
+    document.querySelector('[data-workspace-view="preview"]').addEventListener('click', () => { view = 'preview'; syncView(); });
+    toggle.addEventListener('click', () => { collapsed = !collapsed; syncView(); });
+
+    document.getElementById('mobile-tools-trigger').addEventListener('click', () => toolsDialog.showModal());
+    // Close before invoking an existing action (including opening the share dialog).
+    toolsDialog.addEventListener('click', event => {
+        if (event.target.closest('button,a')) toolsDialog.close();
+    }, true);
+    document.getElementById('mobile-theme-toggle').addEventListener('click', () => document.getElementById('theme-toggle-btn').click());
+
+    function syncBreakpoint() {
+        if (toolsDialog.open) toolsDialog.close();
+        if (mobile.matches) {
+            document.getElementById('mobile-tools-actions').append(footer);
+            document.getElementById('mobile-save-status-host').append(saveStatus);
+        } else {
+            footerHome.after(footer);
+            saveHome.after(saveStatus);
+        }
+        syncViewport();
+        syncView();
+    }
+    function syncViewport() {
+        const viewport = window.visualViewport;
+        const typing = document.activeElement?.matches('input:not([type=range]):not([type=checkbox]):not([type=file]),textarea,[contenteditable=true]');
+        const keyboard = mobile.matches && typing && viewport && viewport.scale === 1 && innerHeight - viewport.height > 120;
+        body.classList.toggle('mobile-keyboard', Boolean(keyboard));
+        body.style.setProperty('--mobile-height', keyboard ? `${viewport.height}px` : '100dvh');
+        body.style.setProperty('--mobile-offset', keyboard ? `${viewport.offsetTop}px` : '0px');
+        if (keyboard) document.activeElement.scrollIntoView({ block:'nearest' });
+        adjustPreviewScale();
+    }
+    function scheduleViewport() {
+        cancelAnimationFrame(viewportFrame);
+        viewportFrame = requestAnimationFrame(syncViewport);
+    }
+    window.visualViewport?.addEventListener('resize', scheduleViewport);
+    window.visualViewport?.addEventListener('scroll', scheduleViewport);
+    document.addEventListener('focusin', scheduleViewport);
+    document.addEventListener('focusout', scheduleViewport);
+    mobile.addEventListener('change', syncBreakpoint);
+    syncBreakpoint();
+}

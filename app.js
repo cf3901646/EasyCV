@@ -255,14 +255,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 function initApp() {
     // A. 导航 Tab 切换逻辑
     const tabBtns = document.querySelectorAll(".tab-btn");
+    const tabScrollPositions = new Map();
     tabBtns.forEach(btn => {
         btn.addEventListener("click", () => {
+            const scroller = document.querySelector('.tab-content-container');
+            const previous = document.querySelector('.tab-btn.active');
+            if (previous) tabScrollPositions.set(previous.dataset.tab, scroller.scrollTop);
             tabBtns.forEach(b => b.classList.remove("active"));
             document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
 
             btn.classList.add("active");
             const targetPane = document.getElementById(btn.dataset.tab);
             targetPane.classList.add("active");
+            scroller.scrollTop = tabScrollPositions.get(btn.dataset.tab) || 0;
+            document.dispatchEvent(new CustomEvent('workspace-tab-change', { detail: btn.dataset.tab }));
         });
     });
 
@@ -1485,10 +1491,11 @@ function adjustPreviewScale() {
     if (!container || !sheet) return;
 
     const containerWidth = container.clientWidth;
-    const padding = 40; // 左右内边距之和
+    const containerStyle = getComputedStyle(container);
+    const padding = parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight);
     if (containerWidth <= padding) return;
     const availableWidth = containerWidth - padding;
-    const sheetWidth = 794; // A4 210mm 约为 794px
+    const sheetWidth = sheet.offsetWidth;
 
     // 计算基础自适应缩放比例（仅在容器放不下时自动缩小）
     let baseScale = 1.0;
@@ -1519,12 +1526,6 @@ function updatePaginationGuides(sheet, scale) {
     const status = document.getElementById('page-count');
     if (status) { status.textContent = `A4 · 约 ${pages} 页`; status.title = '页数为预览估算，以打印结果为准'; }
     sheet.dataset.pages = String(pages);
-
-    const notice = document.getElementById('pagination-notice');
-    const message = document.getElementById('pagination-message');
-    const text = pages > 1 ? `内容已超出 1 页 · 预计 ${pages} 页` : '';
-    if (message && message.textContent !== text) message.textContent = text;
-    if (notice) notice.hidden = pages <= 1;
 
     const guides = document.getElementById('page-guides');
     if (!guides) return;

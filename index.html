@@ -17,8 +17,11 @@
     <link rel="stylesheet" href="controls.css">
 </head>
 <body class="light-theme">
-    <nav class="mobile-view-toggle no-print" aria-label="工作区视图"><button class="active" data-workspace-view="edit" aria-pressed="true">编辑内容</button><button data-workspace-view="preview" aria-pressed="false">简历预览</button></nav>
     <div class="app-container">
+        <header class="mobile-header no-print">
+            <div class="mobile-brand"><span>EasyCV<span class="brand-dot">.</span></span><div id="mobile-save-status-host"></div></div>
+            <div><button class="btn btn-primary" onclick="exportToPDF()">导出 PDF</button><button id="mobile-tools-trigger" class="mobile-more" aria-label="更多操作" aria-haspopup="dialog" aria-controls="mobile-tools-dialog"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i></button></div>
+        </header>
         <!-- 左侧编辑与控制台面板 -->
         <aside class="editor-sidebar no-print">
             <header class="workspace-header">
@@ -39,6 +42,8 @@
                     <i class="fa-solid fa-code"></i> JSON
                 </button>
             </nav>
+
+            <div class="mobile-editor-heading"><h2 id="mobile-editor-title">内容</h2><button id="mobile-preview-toggle" aria-controls="resume-page" aria-expanded="true" hidden>收起预览<i class="fa-solid fa-chevron-up" aria-hidden="true"></i></button></div>
 
             <div class="tab-content-container">
                 <!-- 1. 内容标签页 -->
@@ -255,19 +260,19 @@
             <footer class="editor-footer">
                 <div class="action-grid">
                     <button class="btn btn-primary" onclick="exportToPDF()">
-                        <i class="fa-solid fa-arrow-up-from-bracket"></i> 导出 PDF
+                        <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i> 导出 PDF
                     </button>
                     <button class="btn btn-secondary" id="btn-toggle-example" onclick="loadExampleData()">
-                        <i class="fa-solid fa-lightbulb"></i> 优质程序员示例
+                        <i class="fa-solid fa-lightbulb" aria-hidden="true"></i> 优质程序员示例
                     </button>
                 </div>
                 <div class="action-grid secondary-actions">
-                    <button class="btn btn-secondary" data-share-resume><i class="fa-solid fa-link"></i> 分享链接</button>
+                    <button class="btn btn-secondary" data-share-resume><i class="fa-solid fa-link" aria-hidden="true"></i> 分享链接</button>
                     <button class="btn btn-secondary" onclick="downloadJSONFile()">
-                        <i class="fa-solid fa-download"></i> 导出备份
+                        <i class="fa-solid fa-download" aria-hidden="true"></i> 导出备份
                     </button>
                     <button class="btn btn-secondary" onclick="triggerJSONUpload()">
-                        <i class="fa-solid fa-upload"></i> 导入备份
+                        <i class="fa-solid fa-upload" aria-hidden="true"></i> 导入备份
                     </button>
                     <input type="file" id="json-upload-input" accept=".json" style="display: none;" onchange="importJSONFile(event)">
                 </div>
@@ -294,10 +299,6 @@
             <span id="page-count" class="page-count">A4 · 约 1 页</span><div class="zoom-controls" aria-label="预览缩放"><button id="zoom-out" aria-label="缩小预览">−</button><button id="zoom-reset" title="恢复适合宽度">100%</button><button id="zoom-in" aria-label="放大预览">＋</button></div>
             <div class="workspace-actions"><button class="btn btn-secondary share-trigger" data-share-resume aria-label="分享简历链接"><i class="fa-solid fa-link"></i><span>分享</span></button><button class="btn btn-primary" onclick="exportToPDF()" title="导出 PDF：打印边距选择无，并开启背景图形"><i class="fa-solid fa-arrow-up-from-bracket"></i><span>导出 PDF</span></button></div>
             </div>
-            <div id="pagination-notice" class="pagination-notice no-print" role="status" aria-live="polite" aria-atomic="true" hidden>
-                <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
-                <div><strong id="pagination-message"></strong><p>虚线仅供编辑参考，不会导出。实际分页以打印预览为准。</p></div>
-            </div>
             <!-- 模拟真实的 A4 纸张 -->
             <div class="paper-stage"><div id="resume-page" class="resume-sheet tpl-classic font-inter">
                 <!-- 跨板块悬停虚线发光指示器 (仅网页端，打印自隐) -->
@@ -310,8 +311,19 @@
                 <div id="page-guides" class="page-guides no-print" aria-hidden="true"></div>
             </div>
         </main>
+        <nav class="mobile-dock no-print" aria-label="工作区视图">
+            <button data-mobile-tab="content-tab" data-workspace-view="edit" aria-pressed="true"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i><span>内容</span></button>
+            <button data-mobile-tab="style-tab" aria-pressed="false"><i class="fa-solid fa-sliders" aria-hidden="true"></i><span>样式</span></button>
+            <button data-mobile-tab="layout-tab" aria-pressed="false"><i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>布局</span></button>
+            <button data-workspace-view="preview" aria-pressed="false"><i class="fa-regular fa-file-lines" aria-hidden="true"></i><span>预览</span></button>
+        </nav>
     </div>
 
+    <dialog id="mobile-tools-dialog" class="share-dialog mobile-tools-dialog no-print" aria-labelledby="mobile-tools-title">
+        <div class="share-dialog-header"><h2 id="mobile-tools-title">更多操作</h2><button class="icon-close" data-close-mobile-tools aria-label="关闭更多操作"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>
+        <div class="mobile-tool-options"><button class="btn btn-secondary" data-mobile-tab="json-tab"><i class="fa-solid fa-code" aria-hidden="true"></i> JSON 与 AI 助手</button><button class="btn btn-secondary" id="mobile-theme-toggle"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i> 切换深浅外观</button></div>
+        <div id="mobile-tools-actions"></div>
+    </dialog>
     <dialog id="share-dialog" class="share-dialog no-print" aria-labelledby="share-title" aria-describedby="share-description">
         <div class="share-dialog-header"><h2 id="share-title">分享简历</h2><button type="button" id="close-share-dialog" class="share-close icon-close" aria-label="关闭分享窗口" autofocus><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>
         <p id="share-description">链接包含当前简历和排版。对方打开即可还原、编辑和导出 PDF，无需导入文件。</p>

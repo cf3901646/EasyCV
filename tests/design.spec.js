@@ -130,7 +130,7 @@ test('all templates and full workspace visual and print coverage', async ({page}
     await page.screenshot({path:'artifacts/ui-upgrade/dark.png',animations:'disabled'});
     await page.locator('#theme-toggle-btn').click();
     await page.setViewportSize({width:390,height:844});
-    await page.locator('[data-tab="content-tab"]').click();
+    await page.locator('.mobile-dock [data-mobile-tab="content-tab"]').click();
     await page.screenshot({path:'artifacts/ui-upgrade/mobile-edit.png',animations:'disabled'});
     await page.locator('[data-workspace-view="preview"]').click();
     await page.screenshot({path:'artifacts/ui-upgrade/mobile-preview.png',animations:'disabled'});

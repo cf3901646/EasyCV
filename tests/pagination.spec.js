@@ -8,13 +8,12 @@ test.beforeEach(async ({ page }) => {
     await page.evaluate(() => document.fonts.ready);
 });
 
-test('live editing shows overflow guides, and shortening removes them without changing the document', async ({ page }) => {
+test('live editing shows only page guides and a page count, and shortening removes the guides', async ({ page }) => {
     const original = await page.evaluate(() => resumeApp.getData());
-    await expect(page.locator('#pagination-notice')).toBeHidden();
+    await expect(page.locator('#pagination-notice')).toHaveCount(0);
     await expect(page.locator('.page-guide')).toHaveCount(0);
     await page.locator('.summary-text').fill(longSummary);
-    await expect(page.locator('#pagination-notice')).toBeVisible();
-    await expect(page.locator('#pagination-message')).toContainText('内容已超出 1 页');
+    await expect.poll(async () => Number(await page.locator('#resume-page').getAttribute('data-pages'))).toBeGreaterThan(1);
     const pages = Number(await page.locator('#resume-page').getAttribute('data-pages'));
     expect(pages).toBeGreaterThan(1);
     await expect(page.locator('.page-guide')).toHaveCount(pages - 1);
@@ -30,7 +29,6 @@ test('live editing shows overflow guides, and shortening removes them without ch
     // The overlay must not intercept clicks or become part of the stored resume.
     expect(await page.locator('#page-guides').evaluate(el => getComputedStyle(el).pointerEvents)).toBe('none');
     await page.locator('.summary-text').fill('简短的个人简介。');
-    await expect(page.locator('#pagination-notice')).toBeHidden();
     await expect(page.locator('.page-guide')).toHaveCount(0);
     await expect(page.locator('#page-count')).toHaveText('A4 · 约 1 页');
     const after = await page.evaluate(() => resumeApp.getData());
@@ -38,9 +36,9 @@ test('live editing shows overflow guides, and shortening removes them without ch
     expect(after.info.summary).toBe('简短的个人简介。');
 });
 
-test('page boundaries track margins, zoom and templates, and overflow remains readable on mobile', async ({ page }) => {
+test('page boundaries track margins, zoom and templates, with a visible page count on mobile', async ({ page }) => {
     await page.locator('.summary-text').fill(longSummary);
-    await expect(page.locator('#pagination-notice')).toBeVisible();
+    await expect(page.locator('.page-guide').first()).toBeVisible();
     await page.locator('[data-tab="style-tab"]').click();
     for (const template of ['tpl-classic', 'tpl-split', 'tpl-editorial']) {
         await page.locator(`[data-tpl="${template}"]`).click();
@@ -70,26 +68,25 @@ test('page boundaries track margins, zoom and templates, and overflow remains re
     await expect.poll(async () => Number(await page.locator('#resume-page').getAttribute('data-pages'))).toBeGreaterThan(before);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.locator('[data-workspace-view="preview"]').click();
-    await expect(page.locator('#pagination-notice')).toBeVisible();
-    await expect(page.locator('#pagination-message')).toBeInViewport();
+    await expect(page.locator('#pagination-notice')).toHaveCount(0);
+    await expect(page.locator('#page-count')).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
     fs.mkdirSync('artifacts/pagination', { recursive: true });
     await page.screenshot({ path: 'artifacts/pagination/mobile.png' });
 });
 
-test('guides and warning are excluded from print, with no extra PDF pages', async ({ page }) => {
+test('guides are excluded from print, with no extra PDF pages', async ({ page }) => {
     test.setTimeout(60000);
     await page.locator('.summary-text').fill(longSummary);
-    await expect(page.locator('#pagination-notice')).toBeVisible();
+    await expect(page.locator('.page-guide').first()).toBeVisible();
     fs.mkdirSync('artifacts/pagination', { recursive: true });
     await page.screenshot({ path: 'artifacts/pagination/desktop.png' });
     await page.locator('.preview-container').evaluate(el => { el.scrollTop = 740; });
     await page.screenshot({ path: 'artifacts/pagination/boundary.png' });
     await page.emulateMedia({ media: 'print' });
     await expect(page.locator('#page-guides')).toBeHidden();
-    await expect(page.locator('#pagination-notice')).toBeHidden();
     const pdf = await page.pdf({ path: 'artifacts/pagination/overflow.pdf', preferCSSPageSize: true, printBackground: true });
-    await page.locator('#page-guides, #pagination-notice').evaluateAll(elements => elements.forEach(el => el.remove()));
+    await page.locator('#page-guides').evaluate(el => el.remove());
     const withoutHelpers = await page.pdf({ preferCSSPageSize: true, printBackground: true });
     const pageCount = buffer => (buffer.toString('latin1').match(/\/Type\s*\/Page\b/g) || []).length;
     expect(pageCount(pdf)).toBeGreaterThan(1);

@@ -111,12 +111,12 @@ test('share close icon is geometrically centered, with a clipped rounded scroll 
 
 test('popover surfaces fit mobile and dark mode, and obey reduced motion',async ({page})=>{
     await page.setViewportSize({width:390,height:844});
-    await page.locator('[data-tab="style-tab"]').click(); await page.locator('#custom-color-trigger').click();
+    await page.locator('.mobile-dock [data-mobile-tab="style-tab"]').click(); await page.locator('#custom-color-trigger').click();
     const box=await page.locator('#color-popover').boundingBox();
     expect(box.x).toBeGreaterThanOrEqual(12); expect(box.x+box.width).toBeLessThanOrEqual(378);
     expect(box.y).toBeGreaterThanOrEqual(12); expect(box.y+box.height).toBeLessThanOrEqual(832);
     await page.screenshot({path:'artifacts/control-polish/mobile-color.png',animations:'disabled'});
-    await page.keyboard.press('Escape'); await page.locator('#theme-toggle-btn').click();
+    await page.keyboard.press('Escape'); await page.locator('#mobile-tools-trigger').click(); await page.locator('#mobile-theme-toggle').click();
     await page.locator('#custom-color-trigger').click();
     expect(await page.locator('#color-popover').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(43, 45, 48)');
     await page.screenshot({path:'artifacts/control-polish/dark-color.png',animations:'disabled'});
