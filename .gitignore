@@ -23,3 +23,15 @@ README.txt
 
 # 可选：如果你选择“方案二”不上传中文字体，请取消下方一行的注释
 # harmonyos-sans.woff2
+
+node_modules/
+test-results/
+playwright-report/
+artifacts/
+__pycache__/
+*.py[cod]
+
+# 本地设计调研与过程截图不随软件发布；保留字体技术说明。
+/reports/*
+!/reports/font-audit.md
+/assets/favicon.svg

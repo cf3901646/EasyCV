@@ -1,0 +1,49 @@
+/* Shared floating controls, including their top-layer surfaces. */
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+.workspace-popover { position:fixed; inset:auto; margin:0; padding:8px; border:0; border-radius:20px; background:var(--edit-card); color:var(--edit-text); box-shadow:0 12px 48px #111b3030,0 2px 8px #111b300d; overflow:auto; z-index:90; scrollbar-width:thin; scrollbar-color:#858b9650 transparent; font:13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft YaHei',sans-serif; }
+.workspace-popover:popover-open { animation:popover-enter 160ms cubic-bezier(.2,.7,.2,1); }
+@keyframes popover-enter { from { opacity:0; transform:translateY(4px) scale(.98); } to { opacity:1; transform:none; } }
+.select-trigger { display:inline-flex; align-items:center; justify-content:space-between; gap:14px; min-height:38px; max-width:65%; min-width:0; padding:9px 12px; border:0; border-radius:12px; background:var(--btn-secondary-bg); color:var(--edit-text); font-size:12px; text-align:left; }
+.select-trigger > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.select-trigger svg { width:14px; height:14px; flex-shrink:0; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; transition:transform 160ms; }
+.select-trigger[aria-expanded=true] { background:var(--option-active-bg); color:var(--option-active-text); }
+.select-trigger[aria-expanded=true] svg { transform:rotate(180deg); }
+.select-trigger:hover { background:var(--btn-secondary-hover); }
+.section-layout-actions .select-trigger { max-width:none; min-height:32px; padding:6px 9px; margin-right:4px; gap:8px; }
+.select-menu { padding:6px; border-radius:16px; outline:none; }
+.select-menu [role=option] { padding:10px 32px 10px 12px; border-radius:10px; cursor:pointer; position:relative; }
+.select-menu [aria-selected=true] { color:var(--edit-accent); font-weight:600; }
+.select-menu [aria-selected=true]::after { content:'✓'; position:absolute; right:12px; top:50%; transform:translateY(-50%); }
+.select-menu .is-highlighted { background:var(--btn-secondary-bg); }
+.select-menu:focus-visible .is-highlighted { background:var(--option-active-bg); color:var(--option-active-text); }
+.custom-color-trigger { display:flex; align-items:center; gap:9px; min-height:40px; padding:6px 12px 6px 6px; border:0; border-radius:14px; background:var(--btn-secondary-bg); color:var(--edit-text); }
+.custom-color-trigger:hover,.custom-color-trigger[aria-expanded=true] { background:var(--btn-secondary-hover); }
+.color-swatch { width:28px; height:28px; border-radius:9px; background:var(--picked-color); box-shadow:inset 0 0 0 1px #8882; }
+.color-value { font-size:11px; font-variant-numeric:tabular-nums; }
+.color-popover { width:312px; padding:16px; border-radius:24px; }
+.popover-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px; }
+.popover-heading h3 { font-size:14px; font-weight:600; }
+.icon-close { display:grid; place-items:center; padding:0; flex:0 0 auto; width:30px; height:30px; border:0; border-radius:50%; background:var(--btn-secondary-bg); color:var(--edit-text-muted); line-height:1; }
+.icon-close:hover { background:var(--btn-secondary-hover); color:var(--edit-text); }
+.icon-close svg { display:block; width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
+.color-plane { position:relative; width:100%; height:170px; border-radius:16px; overflow:hidden; touch-action:none; cursor:crosshair; background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),var(--hue-color); }
+.color-point { position:absolute; width:18px; height:18px; transform:translate(-50%,-50%); border:2px solid #fff; border-radius:50%; background:var(--picked-color); box-shadow:0 1px 5px #0006,0 0 0 1px #0003; pointer-events:none; transition:width 140ms,height 140ms; }
+.color-plane.is-dragging .color-point { width:22px; height:22px; }
+.color-hue-row { display:flex; align-items:center; gap:12px; margin:16px 0; }
+.color-current { width:28px; height:28px; flex-shrink:0; border-radius:50%; background:var(--picked-color); box-shadow:inset 0 0 0 1px #8882; }
+.color-popover .color-hue { height:28px; min-width:0; flex:1; background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00) center / 100% 10px no-repeat; border-radius:14px; }
+.eyedropper-btn { display:grid; place-items:center; width:30px; height:30px; flex-shrink:0; padding:6px; border:0; border-radius:10px; background:var(--btn-secondary-bg); color:var(--edit-text); }
+.eyedropper-btn svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.color-fields { display:grid; grid-template-columns:1.65fr 1fr 1fr 1fr; gap:6px; }
+.color-fields label { display:flex; flex-direction:column; gap:6px; min-width:0; font-size:10px; color:var(--edit-text-muted); }
+.color-fields input { width:100%; min-width:0; padding:10px 6px; border:0; border-radius:10px; background:var(--edit-input-bg); color:var(--edit-text); font-size:12px; text-align:center; font-variant-numeric:tabular-nums; appearance:textfield; }
+.color-fields input::-webkit-inner-spin-button,.color-fields input::-webkit-outer-spin-button { appearance:none; margin:0; }
+.color-fields input[aria-invalid=true] { box-shadow:0 0 0 2px #c5363b; }
+.color-error { color:#c5363b; font-size:11px; margin-top:8px; } .color-error:empty { display:none; }
+.popover-note { color:var(--edit-text-muted); font-size:11px; margin-top:12px; }
+.legacy-font-controls { padding:14px; margin-top:16px; border-radius:14px; background:var(--btn-secondary-bg); }
+.legacy-font-controls p { font-size:12px; color:var(--edit-text-muted); }
+.legacy-font-controls .select-row { margin-bottom:0; } .legacy-font-controls .select-trigger { background:var(--edit-card); }
+@media (prefers-reduced-motion:reduce) { .workspace-popover:popover-open { animation:none; } }
+@media (forced-colors:active) { .workspace-popover,.select-trigger,.custom-color-trigger,.icon-close { outline:1px solid CanvasText; } .select-menu .is-highlighted { outline:2px solid Highlight; } .color-plane,.color-swatch,.color-current,.color-hue { forced-color-adjust:none; } .visibility-toggle input { appearance:auto; } }
+@media print { .workspace-popover { display:none !important; } }

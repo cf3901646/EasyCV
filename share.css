@@ -1,0 +1,39 @@
+/* Share controls use the workspace's semantic colors, with no additional library. */
+.secondary-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.secondary-actions .btn { padding-inline: 6px; gap: 5px; }
+.preview-toolbar .workspace-actions { gap: 6px; }
+.preview-toolbar .share-trigger { border: 0; background: var(--btn-secondary-hover); }
+.share-dialog {
+    margin: auto; padding: 28px; width: min(480px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px); overflow: auto; border: 0; border-radius: 24px;
+    color: var(--edit-text); background: var(--edit-card); box-shadow: 0 20px 70px #0003;
+    font-size: 14px; line-height: 1.65;
+}
+.share-dialog::backdrop { background: #12182166; }
+.share-dialog[open] { animation: share-enter 160ms ease-out; }
+.share-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.share-dialog h2 { font-size: 22px; letter-spacing: -.5px; font-weight: 650; }
+.share-dialog p { margin: 14px 0; color: var(--edit-text-muted); }
+.share-dialog .share-close { width: 36px; height: 36px; }
+.share-dialog label { display: block; font-size: 13px; font-weight: 600; margin: 22px 0 8px; }
+.share-link-field { padding: 12px 8px 12px 12px; border-radius: 14px; background: var(--edit-input-bg); overflow: hidden; }
+.share-link-field:focus-within { box-shadow: 0 0 0 2px var(--focus-ring); }
+.share-dialog textarea { display: block; width: 100%; height: 88px; min-height: 88px; resize: none; border: 0; border-radius: 0; background: transparent; color: var(--edit-text); padding: 0 5px 0 0; font-size: 12px; line-height: 1.6; word-break: break-all; outline: none; scrollbar-width: thin; scrollbar-color: #858b9650 transparent; }
+.share-dialog { scrollbar-width: thin; scrollbar-color: #858b9650 transparent; }
+.share-dialog textarea::-webkit-scrollbar { width: 5px; }
+.share-dialog textarea::-webkit-scrollbar-thumb { background: #858b9650; border-radius: 8px; }
+.share-dialog textarea::-webkit-scrollbar-button { display: none; }
+.share-dialog .share-status { font-size: 12px; min-height: 20px; }
+.share-dialog .share-address-note { padding: 12px 14px; border-radius: 12px; background: var(--option-active-bg); color: var(--edit-text); font-size: 13px; }
+.share-dialog .share-privacy { font-size: 12px; }
+.share-dialog-actions { display: flex; justify-content: flex-end; margin-top: 22px; }
+.share-dialog .btn { min-height: 44px; font-size: 14px; border-radius: 22px; padding-inline: 22px; }
+.share-dialog button:disabled { opacity: .5; cursor: default; }
+.shared-resume-banner:not([hidden]) { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-shrink: 0; width: 100%; max-width: 794px; padding: 14px 18px; margin-bottom: 12px; border-radius: 20px; background: var(--edit-card); color: var(--edit-text); }
+.shared-resume-banner strong { font-size: 13px; font-weight: 600; }
+.shared-resume-banner p { font-size: 12px; line-height: 1.6; color: var(--edit-text-muted); margin-top: 4px; }
+.shared-resume-banner a { white-space: nowrap; text-decoration: none; border: 0; border-radius: 18px; background: var(--btn-secondary-hover); }
+@keyframes share-enter { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (max-width: 760px) { .preview-toolbar .share-trigger::after { content: '分享'; } .shared-resume-banner:not([hidden]) { align-items: flex-start; flex-direction: column; } .share-dialog { padding: 24px; } }
+@media (prefers-reduced-motion: reduce) { .share-dialog[open] { animation: none; } }
+@media print { .share-dialog, .shared-resume-banner { display: none !important; } }
