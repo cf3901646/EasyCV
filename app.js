@@ -256,19 +256,24 @@ function initApp() {
     // A. 导航 Tab 切换逻辑
     const tabBtns = document.querySelectorAll(".tab-btn");
     const tabScrollPositions = new Map();
+    const scroller = document.querySelector('.tab-content-container');
+    const rememberTabScroll = () => {
+        const previous = document.querySelector('.tab-btn.active');
+        if (previous && scroller.clientHeight) tabScrollPositions.set(previous.dataset.tab, scroller.scrollTop);
+    };
+    document.addEventListener('workspace-before-preview', rememberTabScroll);
     tabBtns.forEach(btn => {
         btn.addEventListener("click", () => {
-            const scroller = document.querySelector('.tab-content-container');
-            const previous = document.querySelector('.tab-btn.active');
-            if (previous) tabScrollPositions.set(previous.dataset.tab, scroller.scrollTop);
+            rememberTabScroll();
             tabBtns.forEach(b => b.classList.remove("active"));
             document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
 
             btn.classList.add("active");
             const targetPane = document.getElementById(btn.dataset.tab);
             targetPane.classList.add("active");
-            scroller.scrollTop = tabScrollPositions.get(btn.dataset.tab) || 0;
             document.dispatchEvent(new CustomEvent('workspace-tab-change', { detail: btn.dataset.tab }));
+            // The mobile editor must be visible before its scroll position can be restored.
+            scroller.scrollTop = tabScrollPositions.get(btn.dataset.tab) || 0;
         });
     });
 

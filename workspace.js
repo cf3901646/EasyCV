@@ -147,7 +147,10 @@ function initMobileWorkspace() {
         document.querySelector(`.editor-tabs [data-tab="${button.dataset.mobileTab}"]`).click();
     }));
     document.addEventListener('workspace-tab-change', event => { view = event.detail; syncView(); });
-    document.querySelector('[data-workspace-view="preview"]').addEventListener('click', () => { view = 'preview'; syncView(); });
+    document.querySelector('[data-workspace-view="preview"]').addEventListener('click', () => {
+        document.dispatchEvent(new Event('workspace-before-preview'));
+        view = 'preview'; syncView();
+    });
     toggle.addEventListener('click', () => { collapsed = !collapsed; syncView(); });
 
     document.getElementById('mobile-tools-trigger').addEventListener('click', () => toolsDialog.showModal());

@@ -45,8 +45,12 @@ test('mobile editing uses the screen height, with live preview above style and l
     await expect(page.locator('.editor-sidebar')).toBeHidden();
     await expect(page.locator('#page-count')).toBeInViewport();
     await page.screenshot({ path:'artifacts/mobile/preview.png' });
+    await page.locator('.mobile-dock [data-mobile-tab="style-tab"]').click();
+    expect(await page.locator('.tab-content-container').evaluate(el => el.scrollTop)).toBeCloseTo(scroll, 0);
+    await page.locator('[data-workspace-view="preview"]').click();
     await page.locator('[data-workspace-view="edit"]').click();
     await expect(page.locator('#info-name')).toHaveValue('移动端编辑');
+    await expect(page.locator('#info-name')).toBeInViewport();
     expect(await page.evaluate(() => state.settings.fontSize)).toBe(12);
     expect(await page.evaluate(() => state.settings.headerAlign)).toBe('center');
 });
