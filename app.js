@@ -1506,12 +1506,45 @@ function adjustPreviewScale() {
     const stage = sheet.parentElement;
     stage.style.width = `${sheet.offsetWidth * finalScale}px`;
     stage.style.height = `${sheet.offsetHeight * finalScale}px`;
-    const margin = (state.settings?.paddingY ?? 12) * 2 * 96 / 25.4;
-    const pages = Math.max(1, Math.ceil((sheet.scrollHeight - margin - 2) / (297 * 96 / 25.4 - margin)));
+    updatePaginationGuides(sheet, finalScale);
+}
+
+function updatePaginationGuides(sheet, scale) {
+    const pixelsPerMM = 96 / 25.4;
+    const paddingY = (state.settings?.paddingY ?? 12) * pixelsPerMM;
+    const printableHeight = 297 * pixelsPerMM - 2 * paddingY;
+    // The continuous preview has one pair of margins; each printed page has its own.
+    // Allow 2px for CSS mm rounding. Print-time break avoidance can move content further.
+    const pages = Math.max(1, Math.ceil((sheet.scrollHeight - 2 * paddingY - 2) / printableHeight));
     const status = document.getElementById('page-count');
     if (status) { status.textContent = `A4 · 约 ${pages} 页`; status.title = '页数为预览估算，以打印结果为准'; }
     sheet.dataset.pages = String(pages);
 
+    const notice = document.getElementById('pagination-notice');
+    const message = document.getElementById('pagination-message');
+    const text = pages > 1 ? `内容已超出 1 页 · 预计 ${pages} 页` : '';
+    if (message && message.textContent !== text) message.textContent = text;
+    if (notice) notice.hidden = pages <= 1;
+
+    const guides = document.getElementById('page-guides');
+    if (!guides) return;
+    // Keep guides outside the sheet so they cannot affect measurement, editing or export.
+    if (guides.childElementCount !== pages - 1) {
+        const fragment = document.createDocumentFragment();
+        for (let page = 1; page < pages; page++) {
+            const guide = document.createElement('div');
+            guide.className = 'page-guide';
+            const label = document.createElement('span');
+            label.className = 'page-guide-label';
+            label.textContent = `${page} 页`;
+            guide.append(label);
+            fragment.append(guide);
+        }
+        guides.replaceChildren(fragment);
+    }
+    Array.from(guides.children).forEach((guide, index) => {
+        guide.style.top = `${(paddingY + (index + 1) * printableHeight) * scale}px`;
+    });
 }
 
 // 极其优雅的高亮浮动通知 Toast 组件

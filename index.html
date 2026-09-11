@@ -294,6 +294,10 @@
             <span id="page-count" class="page-count">A4 · 约 1 页</span><div class="zoom-controls" aria-label="预览缩放"><button id="zoom-out" aria-label="缩小预览">−</button><button id="zoom-reset" title="恢复适合宽度">100%</button><button id="zoom-in" aria-label="放大预览">＋</button></div>
             <div class="workspace-actions"><button class="btn btn-secondary share-trigger" data-share-resume aria-label="分享简历链接"><i class="fa-solid fa-link"></i><span>分享</span></button><button class="btn btn-primary" onclick="exportToPDF()" title="导出 PDF：打印边距选择无，并开启背景图形"><i class="fa-solid fa-arrow-up-from-bracket"></i><span>导出 PDF</span></button></div>
             </div>
+            <div id="pagination-notice" class="pagination-notice no-print" role="status" aria-live="polite" aria-atomic="true" hidden>
+                <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                <div><strong id="pagination-message"></strong><p>虚线仅供编辑参考，不会导出。实际分页以打印预览为准。</p></div>
+            </div>
             <!-- 模拟真实的 A4 纸张 -->
             <div class="paper-stage"><div id="resume-page" class="resume-sheet tpl-classic font-inter">
                 <!-- 跨板块悬停虚线发光指示器 (仅网页端，打印自隐) -->
@@ -303,6 +307,7 @@
                 <!-- 实时渲染的简历 HTML -->
                 <div id="resume-render-target"></div>
             </div>
+                <div id="page-guides" class="page-guides no-print" aria-hidden="true"></div>
             </div>
         </main>
     </div>

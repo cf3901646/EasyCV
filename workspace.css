@@ -114,11 +114,19 @@ input[type=range].is-dragging::-moz-range-thumb { transform:scale(1.22); }
 .preview-toolbar .btn { border-radius:20px; padding:10px 14px; min-height:36px; }
 .workspace-actions { display:flex; gap:6px; }
 .page-count { font-size:10px; color:var(--edit-text-muted); white-space:nowrap; }
+.pagination-notice { position:sticky; top:58px; z-index:19; width:100%; max-width:794px; flex-shrink:0; display:flex; align-items:flex-start; gap:10px; padding:12px 16px; margin:0 0 16px; border-radius:16px; background:var(--edit-card); color:var(--edit-text); box-shadow:0 4px 20px #23304a09; }
+.pagination-notice > i { color:var(--edit-accent); font-size:15px; margin-top:2px; }
+.pagination-notice strong { display:block; font-size:12px; font-weight:600; }
+.pagination-notice p { margin:3px 0 0; font-size:11px; line-height:1.6; color:var(--edit-text-muted); }
 .zoom-controls { display:flex; border-radius:20px; align-items:center; transition:background-color 180ms; }
 .zoom-controls.is-adjusting { background:var(--option-active-bg); }
 .zoom-controls button { min-width:30px; height:34px; border-radius:17px; background:transparent; color:var(--edit-text-muted); border:0; font-size:12px; }
 .zoom-controls button:hover { background:var(--btn-secondary-bg); } #zoom-reset { min-width:52px; font-variant-numeric:tabular-nums; }
 .paper-stage { position:relative; flex-shrink:0; align-self:flex-start; margin:0 auto; }
+.page-guides { position:absolute; inset:0; overflow:hidden; pointer-events:none; user-select:none; z-index:6; }
+.page-guide { position:absolute; left:0; right:0; height:0; border-top:1px dashed #337cc4b3; }
+.page-guide-label { position:absolute; right:4px; bottom:4px; min-width:20px; padding:1px 5px; border-radius:6px; background:#eaf2fd; color:#275783; font:10px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; text-align:center; }
+@media print { .page-guides,.pagination-notice { display:none !important; } }
 .preview-toolbar { position:sticky; top:0; z-index:20; }
 .resize-handle { width:8px; flex-shrink:0; margin:32px 0; cursor:col-resize; border-radius:8px; position:relative; }
 .resize-handle::after { content:''; position:absolute; height:32px; width:3px; border-radius:3px; background:var(--edit-border); top:45%; left:3px; opacity:0; transition:opacity 150ms; }
