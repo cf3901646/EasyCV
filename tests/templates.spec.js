@@ -32,7 +32,7 @@ test('split sidebar occupies the paper edge and full height, with identity and e
     await page.evaluate(()=>{const data=resumeApp.getData();Object.assign(data.settings,{columnWidth:32,paddingX:16,columnGap:24});resumeApp.setData(data);});
     await page.locator('.paper-stage').screenshot({path:`${dir}/split-preview.png`,animations:'disabled'});
     await page.pdf({path:`${dir}/split.pdf`,preferCSSPageSize:true,printBackground:true});
-    expect(await page.locator('#print-page-settings').textContent()).toContain('margin:12mm 0mm');
+    expect(await page.locator('#print-page-settings').textContent()).toContain('.print-spacer {height:12mm}');
     await page.locator('[data-tab="layout-tab"]').click();
     await page.getByRole('button',{name:'教育背景所在栏：侧栏',exact:true}).click();
     await page.getByRole('option',{name:'主栏',exact:true}).click();
@@ -81,7 +81,7 @@ test('split can paginate long content in both columns with repeated vertical mar
     await page.pdf({path:`${dir}/split-long.pdf`,preferCSSPageSize:true,printBackground:true});
     const pdf=fs.readFileSync(`${dir}/split-long.pdf`).toString('latin1');
     expect((pdf.match(/\/Type\s*\/Page\b/g)||[]).length).toBeGreaterThan(1);
-    expect(await page.locator('#print-page-settings').textContent()).toContain('margin:18mm 0mm');
+    expect(await page.locator('#print-page-settings').textContent()).toContain('.print-spacer {height:18mm}');
     await page.setViewportSize({width:390,height:844});
     await page.locator('[data-workspace-view="preview"]').click();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(390);

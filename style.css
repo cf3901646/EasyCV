@@ -112,16 +112,25 @@
 .resume-sheet[data-heading-style=clean] .sec-title { border:0; padding-left:0; }
 .resume-sheet[data-heading-style=line] .sec-title { border:0; border-bottom:1px solid #cdd3da; padding-left:0; }
 .resume-sheet[data-heading-style=accent] .sec-title { border:0; border-left:2px solid var(--accent-color); padding-left:8px; }
+.print-frame,.print-frame > tbody,.print-frame > tbody > tr,.print-frame > tbody > tr > td { display:contents; }
+.print-frame > thead,.print-frame > tfoot { display:none; }
 @media print {
     @page { size:A4; margin:0; }
     html,body { height:auto !important; overflow:visible !important; background:#fff !important; }
     .no-print,.editor-sidebar,.mobile-view-toggle,.resize-handle { display:none !important; }
     .app-container,.preview-container,.paper-stage { display:block !important; height:auto !important; width:auto !important; overflow:visible !important; margin:0 !important; padding:0 !important; background:none !important; }
+    .print-frame { display:table !important; width:210mm; table-layout:fixed; border-collapse:collapse; border-spacing:0; margin:0; padding:0; border:0; }
+    .print-frame > thead { display:table-header-group; }
+    .print-frame > tfoot { display:table-footer-group; }
+    .print-frame > tbody { display:table-row-group; }
+    .print-frame > :is(thead,tbody,tfoot) > tr { display:table-row; }
+    .print-frame > :is(thead,tbody,tfoot) > tr > td { display:table-cell; padding:0; border:0; vertical-align:top; }
+    .print-frame > thead,.print-frame > tfoot { break-inside:avoid; }
     .resume-sheet { margin:0; width:210mm; transform:none !important; zoom:1 !important; box-shadow:none; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
     .resume-sheet [contenteditable] { outline:none !important; box-shadow:none !important; background:transparent !important; }
     .resume-section { break-inside:auto; } .resume-item { break-inside:avoid; } .resume-sheet h2 { break-after:avoid; }
     .tpl-editorial .resume-section { display:block; } .tpl-editorial .sec-title { float:left; width:90px; } .tpl-editorial .resume-section > :not(.sec-title) { margin-left:108px; } .tpl-editorial .resume-section::after { content:'';display:block;clear:both; }
-    /* The repeated page-content band meets the margin boxes generated in design.js. */
+    /* Paint the sidebar across the entire physical page, including its repeated insets. */
     .tpl-split::before { content:''; position:fixed; left:0; top:0; bottom:0; width:var(--column-width); background:var(--sidebar-fill); z-index:0; }
     .tpl-split #resume-render-target { position:relative; z-index:1; }
     .tpl-split .split-container { min-height:calc(297mm - 2 * var(--page-padding-y)); }

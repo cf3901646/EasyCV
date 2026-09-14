@@ -177,11 +177,10 @@ function flushLayoutUpdate() { cancelAnimationFrame(layoutFrame); layoutFrame = 
 function updatePrintSettings() {
     let rules = document.getElementById('print-page-settings');
     if (!rules) { rules = document.createElement('style'); rules.id = 'print-page-settings'; rules.media = 'print'; document.head.appendChild(rules); }
-    // Margin boxes extend the sidebar through each page's otherwise unpaintable margins.
-    const s = state.settings, split = s.template === 'tpl-split';
-    const band = `linear-gradient(to right,color-mix(in srgb,${s.accentColor} 7%,#f7f8fa) ${s.columnWidth}%,white ${s.columnWidth}%)`;
-    const edges = split ? `@top-left {content:"";width:210mm;background:${band}} @bottom-left {content:"";width:210mm;background:${band}}` : '';
-    const css = `@page {size:A4;margin:${s.paddingY}mm ${split ? 0 : s.paddingX}mm;${edges}} .resume-sheet {padding:0!important;width:auto!important;min-height:0!important}`;
+    // Zero external margins leave no space for browser date/title/URL headers.
+    // Repeating table spacers provide the resume's own top/bottom inset on every page.
+    const s = state.settings;
+    const css = `@page {size:A4;margin:0} .print-spacer {height:${s.paddingY}mm} .resume-sheet {padding:0 ${s.paddingX}mm!important;width:210mm!important;min-height:0!important} .resume-sheet.tpl-split {padding:0!important}`;
     if (rules.textContent !== css) rules.textContent = css;
 }
 function syncDesignUI() {

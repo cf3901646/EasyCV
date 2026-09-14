@@ -297,9 +297,12 @@
                 </button>
             </div>
             <span id="page-count" class="page-count">A4 · 约 1 页</span><div class="zoom-controls" aria-label="预览缩放"><button id="zoom-out" aria-label="缩小预览">−</button><button id="zoom-reset" title="恢复适合宽度">100%</button><button id="zoom-in" aria-label="放大预览">＋</button></div>
-            <div class="workspace-actions"><button class="btn btn-secondary share-trigger" data-share-resume aria-label="分享简历链接"><i class="fa-solid fa-link"></i><span>分享</span></button><button class="btn btn-primary" onclick="exportToPDF()" title="导出 PDF：打印边距选择无，并开启背景图形"><i class="fa-solid fa-arrow-up-from-bracket"></i><span>导出 PDF</span></button></div>
+            <div class="workspace-actions"><button class="btn btn-secondary share-trigger" data-share-resume aria-label="分享简历链接"><i class="fa-solid fa-link"></i><span>分享</span></button><button class="btn btn-primary" onclick="exportToPDF()" title="A4 · 缩放 100% · 边距无 · 关闭页眉页脚 · 开启背景图形；简历留白由软件设置控制"><i class="fa-solid fa-arrow-up-from-bracket"></i><span>导出 PDF</span></button></div>
             </div>
             <!-- 模拟真实的 A4 纸张 -->
+            <table class="print-frame" role="presentation">
+                <thead aria-hidden="true"><tr><td><div class="print-spacer"></div></td></tr></thead>
+                <tbody><tr><td>
             <div class="paper-stage"><div id="resume-page" class="resume-sheet tpl-classic font-inter">
                 <!-- 跨板块悬停虚线发光指示器 (仅网页端，打印自隐) -->
                 <div id="resume-hover-indicator" class="no-print">
@@ -310,6 +313,9 @@
             </div>
                 <div id="page-guides" class="page-guides no-print" aria-hidden="true"></div>
             </div>
+                </td></tr></tbody>
+                <tfoot aria-hidden="true"><tr><td><div class="print-spacer"></div></td></tr></tfoot>
+            </table>
         </main>
         <nav class="mobile-dock no-print" aria-label="工作区视图">
             <button data-mobile-tab="content-tab" data-workspace-view="edit" aria-pressed="true"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i><span>内容</span></button>

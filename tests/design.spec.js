@@ -148,7 +148,7 @@ test('long documents retain all content and repeat print margins', async ({page}
     });
     await page.evaluate(()=>document.fonts.ready);
     await page.pdf({path:'artifacts/ui-upgrade/long-document.pdf',preferCSSPageSize:true,printBackground:true});
-    expect(await page.locator('#print-page-settings').textContent()).toContain('margin:18mm 16mm');
+    expect(await page.locator('#print-page-settings').textContent()).toContain('.print-spacer {height:18mm}');
 });
 
 test('legacy slider limits survive import and link encoding', async ({page}) => {
