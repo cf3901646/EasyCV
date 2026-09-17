@@ -173,3 +173,88 @@ test('oversized content and file URLs give actionable errors', async ({page}) =>
     await expect(page.locator('#share-status')).toContainText('本地文件地址无法分享给他人');
     await expect(page.locator('#copy-share-link')).toBeDisabled();
 });
+
+test('all 9 templates and customized settings survive URL sharing with full fidelity', async ({page, browser}) => {
+    await page.goto(BASE);
+    const ALL_9_TEMPLATES = [
+        'tpl-classic', 'tpl-split', 'tpl-timeline', 'tpl-card',
+        'tpl-banner', 'tpl-studio', 'tpl-minimal', 'tpl-editorial', 'tpl-academic'
+    ];
+    for (const template of ALL_9_TEMPLATES) {
+        const snapshot = await page.evaluate(tpl => {
+            const data = resumeApp.getData();
+            data.info.name = `候选人-${tpl}`;
+            data.settings = {
+                ...data.settings,
+                template: tpl,
+                accentColor: '#10b981',
+                fontSize: 11,
+                lineHeight: 1.5,
+                paddingX: 18,
+                paddingY: 14
+            };
+            resumeApp.setData(data);
+            return resumeApp.getData();
+        }, template);
+
+        const url = await page.evaluate(() => EasyCVShare.createURL());
+        expect(url).toContain('#resume=');
+
+        const recipient = await browser.newPage();
+        await recipient.goto(url);
+        await expect(recipient.locator('#info-name')).toHaveValue(snapshot.info.name);
+        const recipientData = await recipient.evaluate(() => resumeApp.getData());
+        expect(recipientData.settings.template).toBe(template);
+        expect(recipientData.settings.accentColor).toBe('#10b981');
+        expect(recipientData.settings.fontSize).toBe(11);
+        expect(await recipient.locator('#resume-page').getAttribute('class')).toContain(template);
+        await recipient.close();
+    }
+});
+
+test('numeric strings in settings and missing settings are gracefully normalized in share URLs', async ({page, browser}) => {
+    await page.goto(BASE);
+
+    // 1. 测试字符串型数字（例如表单提交产生的 "10.5"、"18"）不会导致崩溃并正确解析
+    const dataWithNumericStrings = await page.evaluate(() => {
+        const d = resumeApp.getData();
+        d.settings.template = 'tpl-timeline';
+        d.settings.fontSize = '10.5';
+        d.settings.paddingX = '18';
+        d.settings.lineHeight = '1.45';
+        return d;
+    });
+    const tokenWithStrings = await page.evaluate(data => EasyCVShare.encode(data), dataWithNumericStrings);
+    const decoded = await page.evaluate(tok => EasyCVShare.decode(tok), tokenWithStrings);
+    expect(decoded.settings.template).toBe('tpl-timeline');
+    expect(typeof decoded.settings.fontSize).toBe('number');
+    expect(decoded.settings.fontSize).toBe(10.5);
+    expect(decoded.settings.paddingX).toBe(18);
+
+    // 2. 测试缺少 settings 的老版本/纯内容 URL 不会报错，平滑补充默认排版
+    const pureContentResume = {
+        info: { name: '纯文本简历候选人', title: '全栈工程师', email: 'test@example.com', phone: '13800000000' },
+        skills: [{ category: '技术', tags: 'Node.js, React' }],
+        work: [],
+        projects: [],
+        education: []
+    };
+    const pureToken = token({ resume: pureContentResume });
+    await page.goto(BASE + '#resume=' + pureToken);
+    await expect(page.locator('#info-name')).toHaveValue('纯文本简历候选人');
+    await expect(page.locator('#share-error-dialog')).toBeHidden();
+    const loadedData = await page.evaluate(() => resumeApp.getData());
+    expect(loadedData.settings).toBeDefined();
+    expect(loadedData.settings.template).toBe('tpl-classic');
+});
+
+test('address bar hash updates when share dialog is opened', async ({page}) => {
+    await page.goto(BASE);
+    await page.locator('#info-name').fill('地址栏同步测试');
+    await page.locator('[data-share-resume]').first().click();
+    await expect(page.locator('#copy-share-link')).toBeEnabled();
+    const shareUrl = await page.locator('#share-url').inputValue();
+    const currentHash = new URL(page.url()).hash;
+    expect(currentHash).toMatch(/^#resume=1g\./);
+    expect(shareUrl).toContain(currentHash);
+});

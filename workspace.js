@@ -49,9 +49,13 @@ function normalizeResume(data, baseSettings = state.settings || {}) {
     for (const [key, value] of Object.entries(data.settings || {})) {
         if (!(key in settings) || ['__proto__', 'constructor', 'prototype'].includes(key)) continue;
         if (typeof settings[key] === 'number') {
-            if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1000) throw new Error(`${key} 数值无效`);
-        } else if (typeof value !== 'string') throw new Error(`${key} 必须是文字`);
-        settings[key] = value;
+            const num = typeof value === 'number' ? value : (typeof value === 'string' && value.trim() !== '' ? Number(value) : NaN);
+            if (Number.isFinite(num) && num >= 0 && num <= 1000) {
+                settings[key] = num;
+            }
+        } else if (typeof value === 'string') {
+            settings[key] = value;
+        }
     }
     if (!RESUME_TEMPLATES.some(template => template[0] === settings.template)) settings.template = 'tpl-classic';
     if (![...RESUME_FONTS,...LEGACY_FONTS].some(font => font[0] === settings.font)) settings.font = 'font-notosanssc-offline';

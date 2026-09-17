@@ -69,18 +69,40 @@ const EasyCVShare = (() => {
         }
         if (bytes.length > MAX_BYTES) throw new Error('简历数据过大，请使用 JSON 备份导入。');
         const payload = JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(bytes));
-        if (!payload || !payload.resume || !payload.resume.settings || Array.isArray(payload.resume.settings)) throw new Error('链接缺少简历或排版数据。');
+        if (!payload || !payload.resume || typeof payload.resume !== 'object') throw new Error('链接缺少简历数据。');
+        if (!payload.resume.settings || typeof payload.resume.settings !== 'object' || Array.isArray(payload.resume.settings)) {
+            payload.resume.settings = {};
+        }
         // Share defaults are deterministic, never inherited from the recipient's resume.
         return normalizeResume(payload.resume, {});
     }
 
-    async function createURL(data = window.resumeApp.getData()) {
+    async function createURL(data) {
         if (!['https:', 'http:'].includes(location.protocol)) throw new Error('请在已发布的 EasyCV 网站上生成分享链接。直接打开的本地文件地址无法分享给他人。');
+        const resumeData = data || (window.resumeApp ? window.resumeApp.getData() : (typeof state !== 'undefined' ? state : null));
+        if (!resumeData) throw new Error('无法读取简历数据。');
         const url = new URL(location.href);
         url.search = '';
-        url.hash = PREFIX.slice(1) + await encode(data);
+        url.hash = PREFIX.slice(1) + await encode(resumeData);
         if (url.href.length > MAX_URL_LENGTH) throw new Error('链接过长，请导出 JSON 备份传递。');
         return url.href;
+    }
+
+    let syncTimer = null;
+    function syncAddressBarURL(data) {
+        if (!active || !['https:', 'http:'].includes(location.protocol)) return;
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(async () => {
+            try {
+                const currentData = data || (window.resumeApp ? window.resumeApp.getData() : (typeof state !== 'undefined' ? state : null));
+                if (!currentData || !currentData.info) return;
+                const token = await encode(currentData);
+                const newHash = PREFIX + token;
+                if (location.hash !== newHash) {
+                    history.replaceState(null, '', location.pathname + location.search + newHash);
+                }
+            } catch (e) {}
+        }, 300);
     }
 
     async function prepare() {
@@ -124,6 +146,11 @@ const EasyCVShare = (() => {
                 field.value = url;
                 copy.disabled = false;
                 status.textContent = url.length > 8000 ? `链接共 ${url.length.toLocaleString()} 个字符，部分应用可能截断，请确保完整发送。` : `已包含当前内容与排版 · ${url.length.toLocaleString()} 个字符`;
+                try {
+                    if (['https:', 'http:'].includes(location.protocol)) {
+                        history.replaceState(null, '', url);
+                    }
+                } catch (e) {}
                 if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
                     note.hidden = false;
                     note.textContent = '这是本机预览地址。请在已发布的网站上生成可发给他人的链接。';
@@ -161,7 +188,7 @@ const EasyCVShare = (() => {
         });
     }
 
-    return {get active() { return active; }, encode, decode, createURL, prepare, initUI,
+    return {get active() { return active; }, encode, decode, createURL, syncAddressBarURL, prepare, initUI,
         storage: {
             getItem: key => active ? (memory.get(key) ?? null) : localStorage.getItem(key),
             setItem: (key, value) => active ? memory.set(key, String(value)) : localStorage.setItem(key, value)

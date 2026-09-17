@@ -204,14 +204,15 @@ function loadSchemeSettings(schemeName) {
     if (cachedSettings) {
         try {
             const settings = JSON.parse(cachedSettings);
-            if (settings.fontSize !== undefined) {
+            if (settings && typeof settings === 'object') {
                 if (settings.titleSize === undefined) settings.titleSize = 1.15;
                 if (settings.titleWeight === undefined) settings.titleWeight = 700;
                 // 字体安全性降级校验：防止历史缓存的已废弃衬线字体导致报错
                 if (settings.font === "font-garamond" || settings.font === "font-playfair") {
                     settings.font = "font-inter";
                 }
-                return normalizeResume({info:{}, settings}, {}).settings;
+                const defaultBase = schemeName === 'A' ? DEFAULT_SETTINGS_A : DEFAULT_SETTINGS_B;
+                return normalizeResume({info:{}, settings}, defaultBase).settings;
             }
         } catch (e) {}
     }
@@ -404,6 +405,9 @@ function flushLocalSave() {
     // 2. 持久化当前方案的排版设置
     const settingsKey = `easycv_resume_settings_${currentScheme.toLowerCase()}`;
     resumeStorage.setItem(settingsKey, JSON.stringify(state.settings));
+    if (typeof EasyCVShare !== 'undefined' && typeof EasyCVShare.syncAddressBarURL === 'function') {
+        EasyCVShare.syncAddressBarURL(state);
+    }
     const status = document.getElementById('save-status');
     if (status) status.textContent = EasyCVShare.active ? '链接简历 · 本次页面暂存' : '已保存到本机';
     } catch (error) {
