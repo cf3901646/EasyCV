@@ -1,4 +1,24 @@
-﻿# EasyCV 简历工作台
+# ⚡ EasyCV 简历工作台 — 纯静态优雅简历编辑器
+
+<p align="center">
+  <a href="https://easycvbuilder.vercel.app"><img src="https://img.shields.io/badge/%F0%9F%9A%80_%E5%9C%A8%E7%BA%BF%E5%85%8D%E5%AE%89%E8%A3%85%E4%BD%93%E9%AA%8C-Vercel_App-000000?style=for-the-badge&logo=vercel" alt="Live Demo" /></a>
+  <a href="https://github.com/cf3901646/EasyCV/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/Release-v1.0.0-blue?style=for-the-badge&logo=github" alt="Release" /></a>
+  <img src="https://img.shields.io/badge/Framework-Zero_Framework-success?style=for-the-badge&logo=javascript" alt="Zero Dependencies" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
+</p>
+
+<p align="center">
+  <b>极简原生 · 所见即所得 · 9 款精炼模板 · 移动端/桌面端自适应 · 零配置一键 A4 打印导出</b>
+</p>
+
+<p align="center">
+  <a href="https://easycvbuilder.vercel.app">👉 立即在线体验</a> •
+  <a href="#使用">快速上手</a> •
+  <a href="#样式与模板">模板特性</a> •
+  <a href="#导出与打印">PDF 打印指南</a>
+</p>
+
+---
 
 使用原生 HTML、CSS 和 JavaScript 的本地简历编辑器。无需构建，无运行时框架。新版采用简洁的浅色/深色工作台，并适配手机屏幕。
 
