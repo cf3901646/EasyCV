@@ -354,6 +354,9 @@ function initApp() {
             }
         });
     }
+
+    // 初始化纯前端免下载 AI Copilot 智能助手
+    initAICopilot();
 }
 
 // 深度路径值提取辅助 (如: getNestedValue(state, "info.name"))
@@ -1644,8 +1647,8 @@ ${genericSchema}
 1. 只返回合法的 JSON 代码块：严禁输出任何前言、解释、致谢或 Markdown 其它富文本，直接以 \`{\` 开始，以 \`}\` 结束。确保可以直接被 \`JSON.parse()\` 解析。
 2. 保持数据类型的完整，details 必须是数组。
 
-以下是我的简历相关经历文字：
-[在此处输入或粘贴您的简历相关文字，然后把完整的提示词发给AI，然后再粘贴到简历编辑器中]`;
+以下是我的简历相关经历文字与诉求：
+${(document.getElementById('ai-user-prompt-input')?.value?.trim()) || '[在此处输入或粘贴您的简历相关文字，然后把完整的提示词发给AI，然后再粘贴到简历编辑器中]'}`;
 
     // 执行无痛复制
     const tempTextarea = document.createElement('textarea');
@@ -1907,7 +1910,7 @@ function initSidebarResize() {
 }
 
 // ====================================================
-// 9. 专为 AI 自动填报与精修简历定制的智能 Prompt 合成引擎
+// 9. 专为 AI 自动填报与精修简历定制的智能 Prompt 合成引擎 & 纯前端免下载 AI Copilot
 // ====================================================
 
 // 展开与收折 AI 极客助手卡片
@@ -1918,8 +1921,269 @@ function toggleAICopilot() {
     }
 }
 
+// 初始化纯前端 AI Copilot
+function initAICopilot() {
+    const apiKeyInput = document.getElementById('ai-api-key-input');
+    const modelSelect = document.getElementById('ai-model-select');
+    const customContainer = document.getElementById('ai-custom-model-container');
+    const customInput = document.getElementById('ai-custom-model-input');
 
-// 自适应 textarea 高度，消灭垂直滚动条，实现内容自动完整展开
+    if (!apiKeyInput || !modelSelect) return;
+
+    // 从本地 localStorage 读取已保存的 Key
+    const savedKey = localStorage.getItem('easycv_openrouter_key');
+    if (savedKey) {
+        apiKeyInput.value = savedKey;
+    }
+
+    apiKeyInput.addEventListener('input', () => {
+        localStorage.setItem('easycv_openrouter_key', apiKeyInput.value.trim());
+    });
+
+    // 从本地读取模型配置
+    const savedModel = localStorage.getItem('easycv_ai_model');
+    if (savedModel) {
+        const optionExists = Array.from(modelSelect.options).some(opt => opt.value === savedModel);
+        if (optionExists) {
+            modelSelect.value = savedModel;
+            if (customContainer) customContainer.style.display = 'none';
+        } else {
+            modelSelect.value = 'custom';
+            if (customContainer) {
+                customContainer.style.display = 'block';
+                if (customInput) customInput.value = savedModel;
+            }
+        }
+    }
+
+    modelSelect.addEventListener('change', () => {
+        if (modelSelect.value === 'custom') {
+            if (customContainer) customContainer.style.display = 'block';
+            if (customInput && customInput.value.trim()) {
+                localStorage.setItem('easycv_ai_model', customInput.value.trim());
+            }
+        } else {
+            if (customContainer) customContainer.style.display = 'none';
+            localStorage.setItem('easycv_ai_model', modelSelect.value);
+        }
+    });
+
+    if (customInput) {
+        customInput.addEventListener('input', () => {
+            if (modelSelect.value === 'custom') {
+                localStorage.setItem('easycv_ai_model', customInput.value.trim());
+            }
+        });
+    }
+}
+
+// 执行纯前端 AI 智能生成并直接填报简历
+async function runAICopilot() {
+    const apiKeyInput = document.getElementById('ai-api-key-input');
+    const modelSelect = document.getElementById('ai-model-select');
+    const customInput = document.getElementById('ai-custom-model-input');
+    const promptInput = document.getElementById('ai-user-prompt-input');
+    const statusIndicator = document.getElementById('ai-status-indicator');
+    const generateBtn = document.getElementById('ai-generate-btn');
+
+    if (!apiKeyInput || !promptInput || !statusIndicator) return;
+
+    const apiKey = apiKeyInput.value.trim();
+    if (!apiKey) {
+        statusIndicator.style.display = 'block';
+        statusIndicator.style.borderLeftColor = '#ef4444';
+        statusIndicator.innerHTML = '<span style="color:#ef4444;"><i class="fa-solid fa-circle-exclamation"></i> 请输入 OpenRouter API Key（点击上方链接可免费申请）。</span>';
+        apiKeyInput.focus();
+        return;
+    }
+
+    let selectedModel = modelSelect ? modelSelect.value : 'liquid/lfm-2.5-2.6b:free';
+    if (selectedModel === 'custom') {
+        selectedModel = (customInput && customInput.value.trim()) ? customInput.value.trim() : '';
+        if (!selectedModel) {
+            statusIndicator.style.display = 'block';
+            statusIndicator.style.borderLeftColor = '#ef4444';
+            statusIndicator.innerHTML = '<span style="color:#ef4444;"><i class="fa-solid fa-circle-exclamation"></i> 请输入自定义模型 ID。</span>';
+            if (customInput) customInput.focus();
+            return;
+        }
+    }
+
+    const userText = promptInput.value.trim();
+    if (!userText) {
+        statusIndicator.style.display = 'block';
+        statusIndicator.style.borderLeftColor = '#ef4444';
+        statusIndicator.innerHTML = '<span style="color:#ef4444;"><i class="fa-solid fa-circle-exclamation"></i> 请在上方输入您的经历、项目描述或优化诉求。</span>';
+        promptInput.focus();
+        return;
+    }
+
+    statusIndicator.style.display = 'block';
+    statusIndicator.style.borderLeftColor = 'var(--edit-accent)';
+    statusIndicator.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在调用 AI 进行 STAR 提炼与量化加粗，请稍候...';
+    if (generateBtn) {
+        generateBtn.disabled = true;
+        generateBtn.style.opacity = '0.7';
+    }
+
+    try {
+        const currentData = window.resumeApp ? window.resumeApp.getData() : state;
+        const systemPrompt = `你是一个顶级职业发展顾问与简历制作专家。根据用户提供的经历描述或更新诉求，结合现有的简历数据，生成一份高质量、符合 STAR 原则（情境、任务、行动、结果）的简历 JSON。
+
+### 核心写作规范：
+1. 重点词汇加粗：所有关键技能名称、重要职责行为、核心量化业绩（如：<strong>Python</strong>、<strong>节省12小时工时</strong>、<strong>稳定性达 99.99%</strong>）必须用 <strong> 标签包裹。
+2. 严禁 Markdown 加粗：绝对不要输出 ** 双星号加粗，所有加粗必须使用 <strong> 标签。
+3. 严禁 Emoji 表情与多余修饰。
+4. 保护现有简历：如果用户未提及某板块（如基本信息、教育背景），保留现有简历的合理内容；将新经历精准归纳到 skills、work 或 projects 中。
+5. 只返回纯 JSON 字符串：绝对不要输出任何 markdown 围栏（不要写 \`\`\`json），不要输出任何前言、总结或致谢，必须直接以 { 开始，以 } 结束。确保可以直接被 JSON.parse() 解析。
+
+### 数据结构 Schema 参考：
+{
+  "info": {
+    "name": "姓名",
+    "title": "求职意向/岗位",
+    "email": "邮箱",
+    "phone": "电话",
+    "location": "意向城市",
+    "github": "GitHub(选填)",
+    "blog": "博客/作品集(选填)",
+    "summary": "专业总结（重点词用 <strong> 包裹）"
+  },
+  "skills": [
+    { "category": "技能分类", "tags": "技能项用逗号分隔" }
+  ],
+  "work": [
+    {
+      "company": "公司名称",
+      "role": "职位",
+      "time": "时间（如：2023.03 - 至今）",
+      "details": ["工作与量化成果细节，重点词用 <strong> 包裹"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "项目名称",
+      "tech": "所用技术栈",
+      "time": "时间（如：2023.10 - 2024.02）",
+      "details": ["项目背景、技术攻坚与最终成效，重点词用 <strong> 包裹"]
+    }
+  ],
+  "education": [
+    {
+      "school": "学校名称",
+      "degree": "学历",
+      "major": "专业",
+      "time": "时间",
+      "details": ["主修课程或荣誉"]
+    }
+  ],
+  "custom": []
+}`;
+
+        const resumeContentOnly = {
+            info: currentData.info,
+            skills: currentData.skills,
+            work: currentData.work,
+            projects: currentData.projects,
+            education: currentData.education,
+            custom: currentData.custom
+        };
+
+        const userPrompt = `【用户最新提供的经历与诉求】：
+${userText}
+
+【当前已有简历数据参考】：
+${JSON.stringify(resumeContentOnly, null, 2)}`;
+
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': window.location.origin || 'https://easycv.app',
+                'X-Title': 'EasyCV Resume Builder'
+            },
+            body: JSON.stringify({
+                model: selectedModel,
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userPrompt }
+                ],
+                temperature: 0.3
+            })
+        });
+
+        if (!response.ok) {
+            const errBody = await response.text();
+            let errMsg = `请求失败 (HTTP ${response.status})`;
+            try {
+                const parsedErr = JSON.parse(errBody);
+                if (parsedErr.error && parsedErr.error.message) {
+                    errMsg += `: ${parsedErr.error.message}`;
+                }
+            } catch (e) {
+                if (errBody) errMsg += `: ${errBody.slice(0, 100)}`;
+            }
+            throw new Error(errMsg);
+        }
+
+        const data = await response.json();
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+            throw new Error('AI 返回的数据结构不完整，请重试');
+        }
+
+        let rawContent = data.choices[0].message.content.trim();
+        // 清洗可能存在的 markdown 代码围栏
+        const jsonBlockMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+        if (jsonBlockMatch) {
+            rawContent = jsonBlockMatch[1].trim();
+        } else {
+            const braceMatch = rawContent.match(/(\{[\s\S]*\})/);
+            if (braceMatch) {
+                rawContent = braceMatch[1].trim();
+            }
+        }
+
+        let parsedResume;
+        try {
+            parsedResume = JSON.parse(rawContent);
+        } catch (jsonErr) {
+            throw new Error('AI 返回的内容未能成功解析为合法 JSON，请尝试切换其它模型或简化输入。返回摘要：' + rawContent.slice(0, 80));
+        }
+
+        // 确保 settings 完整继承现有配置（模板、强调色、排版滑块）
+        parsedResume.settings = { ...(currentData.settings || {}) };
+
+        // 注入到应用中
+        if (window.resumeApp && typeof window.resumeApp.setData === 'function') {
+            window.resumeApp.setData(parsedResume);
+        } else {
+            state = normalizeResume(parsedResume);
+            saveToLocal();
+            renderAll();
+        }
+
+        updateJSONCodearea();
+
+        statusIndicator.style.borderLeftColor = '#10b981';
+        statusIndicator.innerHTML = '<span style="color:#10b981;"><i class="fa-solid fa-circle-check"></i> 简历已成功智能生成并注入画布！您可直接在右侧画布或“内容”标签中查看微调。</span>';
+        showNotification('✨ AI 智能简历生成成功，已实时更新右侧画布！');
+    } catch (err) {
+        console.error('EasyCV AI Copilot Error:', err);
+        statusIndicator.style.borderLeftColor = '#ef4444';
+        statusIndicator.innerHTML = `<span style="color:#ef4444;"><i class="fa-solid fa-circle-exclamation"></i> 生成失败: ${err.message || '网络异常，请重试'}</span>`;
+        showNotification('AI 生成遇到问题，请查看卡片提示');
+    } finally {
+        if (generateBtn) {
+            generateBtn.disabled = false;
+            generateBtn.style.opacity = '1';
+        }
+    }
+}
+
+// 暴露函数供外部与测试调用
+window.initAICopilot = initAICopilot;
+window.runAICopilot = runAICopilot;
 
 // 自适应 textarea 高度，消灭垂直滚动条，实现内容自动完整展开
 function autoResizeTextarea(el) {

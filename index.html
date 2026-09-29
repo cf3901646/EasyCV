@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -226,17 +226,59 @@
                 </section>
                 <!-- 3. JSON 源码编辑标签页 (专为 AI 及高阶用户定制) -->
                 <section class="tab-pane" id="json-tab">
-                    <!-- AI 极速助手卡片 -->
-                    <div class="ai-copilot-card no-print">
+                    <!-- AI 极速助手卡片 (支持纯网页一键智能生成) -->
+                    <div class="ai-copilot-card no-print expanded">
                         <div class="ai-copilot-header" onclick="toggleAICopilot()">
-                            <span class="ai-title"><i class="fa-solid fa-wand-magic-sparkles"></i> 借助 AI 整理经历</span>
+                            <span class="ai-title"><i class="fa-solid fa-wand-magic-sparkles"></i> 借助 AI 智能整理经历</span>
                             <i class="fa-solid fa-chevron-down ai-arrow" id="ai-copilot-arrow"></i>
                         </div>
                         <div class="ai-copilot-body" id="ai-copilot-body">
-                            <p class="ai-desc">复制结构化提示词，交给你使用的 AI 工具。把生成的 JSON 粘贴到下方，即可应用。</p>
-                            <button class="btn btn-ai-gradient" onclick="copyAIPromptToClipboard()">
-                                <i class="fa-solid fa-copy"></i> 复制 AI 提示词
-                            </button>
+                            <p class="ai-desc">无需下载任何软件，输入粗糙经历，AI 即可根据 STAR 原则智能提炼、加粗核心量化成果并自动填入简历画布。</p>
+
+                            <div class="ai-form-group">
+                                <div class="ai-label">
+                                    <span>OpenRouter API Key <span style="font-weight:normal;color:var(--edit-text-muted);">(仅保存在本地浏览器)</span></span>
+                                    <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer">获取免费 Key <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                </div>
+                                <input type="password" id="ai-api-key-input" class="ai-input" placeholder="sk-or-v1-..." autocomplete="off">
+                            </div>
+
+                            <div class="ai-form-group">
+                                <div class="ai-label">
+                                    <span>选择 AI 模型</span>
+                                </div>
+                                <select id="ai-model-select" class="ai-select">
+                                    <option value="liquid/lfm-2.5-2.6b:free">Liquid LFM 2.5 (免费/极速推荐)</option>
+                                    <option value="google/gemma-4-31b-it:free">Google Gemma 4 (免费/备用)</option>
+                                    <option value="z-ai/glm-5.2:free">Z-AI GLM 5.2 (免费/备用)</option>
+                                    <option value="custom">自定义模型名称...</option>
+                                </select>
+                            </div>
+
+                            <div class="ai-form-group" id="ai-custom-model-container" style="display:none;">
+                                <div class="ai-label">
+                                    <span>自定义模型 ID</span>
+                                </div>
+                                <input type="text" id="ai-custom-model-input" class="ai-input" placeholder="例如：mistralai/mistral-7b-instruct:free">
+                            </div>
+
+                            <div class="ai-form-group">
+                                <div class="ai-label">
+                                    <span>输入原始经历 / 岗位 / 诉求</span>
+                                </div>
+                                <textarea id="ai-user-prompt-input" class="ai-textarea" rows="4" placeholder="例如：我叫张三，求职前端/全栈。最近做了利安隆项目周报自动化，利用 Python 和 RPA 实现了自动抓取数据、清洗、发送邮件，每周节省工时10小时..."></textarea>
+                            </div>
+
+                            <div class="ai-btn-group">
+                                <button class="btn btn-primary" id="ai-generate-btn" onclick="runAICopilot()">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> 一键智能润色并填入简历
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="copyAIPromptToClipboard()">
+                                    <i class="fa-solid fa-copy"></i> 复制完整 Prompt (离线/手动模式)
+                                </button>
+                            </div>
+
+                            <div id="ai-status-indicator" class="ai-status-indicator" style="display:none;"></div>
                         </div>
                     </div>
 
