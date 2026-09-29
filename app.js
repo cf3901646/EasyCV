@@ -342,6 +342,9 @@ function initApp() {
 
     // 初始化纯前端免下载 AI Copilot 智能助手
     initAICopilot();
+
+    // 初始化导出 PDF 设置指引弹窗
+    initPDFGuideDialog();
 }
 
 // 深度路径值提取辅助 (如: getNestedValue(state, "info.name"))
@@ -1386,11 +1389,71 @@ function initVisualEditor() {
 }
 
 // 直接唤起系统打印预览以进行 PDF 导出
-async function exportToPDF() {
+async function directExportToPDF() {
     flushLayoutUpdate();
     await document.fonts.ready;
     adjustPreviewScale();
     window.print();
+}
+
+// 唤起导出 PDF（带有最佳打印参数提示弹窗指引，支持勾选下次不再提示）
+async function exportToPDF() {
+    try {
+        if (localStorage.getItem('easycv_skip_print_guide') === 'true') {
+            await directExportToPDF();
+            return;
+        }
+    } catch (_) {}
+    const dialog = document.getElementById('pdf-guide-dialog');
+    if (dialog && typeof dialog.showModal === 'function') {
+        const checkbox = document.getElementById('skip-pdf-guide-checkbox');
+        if (checkbox) checkbox.checked = false;
+        dialog.showModal();
+    } else {
+        await directExportToPDF();
+    }
+}
+
+// 打开 PDF 打印设置指引弹窗
+function openPDFGuide() {
+    const mobileTools = document.getElementById('mobile-tools-dialog');
+    if (mobileTools && mobileTools.open) mobileTools.close();
+    const dialog = document.getElementById('pdf-guide-dialog');
+    if (dialog && typeof dialog.showModal === 'function') {
+        const checkbox = document.getElementById('skip-pdf-guide-checkbox');
+        if (checkbox) {
+            try { checkbox.checked = localStorage.getItem('easycv_skip_print_guide') === 'true'; } catch (_) {}
+        }
+        dialog.showModal();
+    }
+}
+
+// 初始化导出指引弹窗的事件监听
+function initPDFGuideDialog() {
+    const dialog = document.getElementById('pdf-guide-dialog');
+    if (!dialog) return;
+    const closeBtn = document.getElementById('close-pdf-guide-dialog');
+    const cancelBtn = document.getElementById('cancel-pdf-guide');
+    const confirmBtn = document.getElementById('confirm-pdf-guide');
+    const checkbox = document.getElementById('skip-pdf-guide-checkbox');
+
+    const closeDialog = () => {
+        if (dialog.open) dialog.close();
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closeDialog);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeDialog);
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async () => {
+            if (checkbox && checkbox.checked) {
+                try { localStorage.setItem('easycv_skip_print_guide', 'true'); } catch (_) {}
+            }
+            closeDialog();
+            setTimeout(() => {
+                directExportToPDF();
+            }, 60);
+        });
+    }
 }
 
 // 下载 JSON 简历配置文件至本地 (仅备份当前激活方案与文字)

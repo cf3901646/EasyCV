@@ -178,9 +178,9 @@ function updatePrintSettings() {
     let rules = document.getElementById('print-page-settings');
     if (!rules) { rules = document.createElement('style'); rules.id = 'print-page-settings'; rules.media = 'print'; document.head.appendChild(rules); }
     // Zero external margins leave no space for browser date/title/URL headers.
-    // Repeating table spacers provide the resume's own top/bottom inset on every page.
+    // Ensure resume-sheet maintains 100% identical box model, padding and width to screen preview.
     const s = state.settings;
-    const css = `@page {size:A4;margin:0} .print-spacer {height:${s.paddingY}mm} .resume-sheet {padding:0 ${s.paddingX}mm!important;width:210mm!important;min-height:0!important} .resume-sheet.tpl-split {padding:0!important}`;
+    const css = `@page {size:A4;margin:0} .print-spacer {height:${s.paddingY}mm} .resume-sheet {padding:${s.paddingY}mm ${s.paddingX}mm!important;width:210mm!important;min-height:297mm!important;box-sizing:border-box!important} .resume-sheet.tpl-split {padding:0!important}`;
     if (rules.textContent !== css) rules.textContent = css;
 }
 function syncDesignUI() {

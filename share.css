@@ -29,6 +29,89 @@
 .share-dialog-actions { display: flex; justify-content: flex-end; margin-top: 22px; }
 .share-dialog .btn { min-height: 44px; font-size: 14px; border-radius: 22px; padding-inline: 22px; }
 .share-dialog button:disabled { opacity: .5; cursor: default; }
+
+/* PDF 导出与打印指引弹窗 */
+.pdf-guide-dialog {
+    width: min(520px, calc(100vw - 32px));
+}
+.pdf-guide-lead {
+    margin: 10px 0 16px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--edit-text-muted);
+}
+.pdf-guide-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.pdf-guide-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--edit-input-bg);
+    border: 1px solid var(--edit-border, transparent);
+}
+.pdf-guide-step.highlight-step {
+    background: var(--option-active-bg);
+    border-color: color-mix(in srgb, var(--accent-color) 35%, transparent);
+}
+.pdf-step-num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+.pdf-step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 13px;
+}
+.pdf-step-body strong {
+    color: var(--edit-text);
+    font-weight: 600;
+}
+.pdf-step-body span {
+    color: var(--edit-text-muted);
+    font-size: 12px;
+    line-height: 1.45;
+}
+.pdf-guide-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--edit-border, rgba(255,255,255,0.08));
+}
+.pdf-guide-skip-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    color: var(--edit-text-muted);
+}
+.pdf-guide-skip-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--accent-color);
+}
 .shared-resume-banner:not([hidden]) { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-shrink: 0; width: 100%; max-width: 794px; padding: 14px 18px; margin-bottom: 12px; border-radius: 20px; background: var(--edit-card); color: var(--edit-text); }
 .shared-resume-banner strong { font-size: 13px; font-weight: 600; }
 .shared-resume-banner p { font-size: 12px; line-height: 1.6; color: var(--edit-text-muted); margin-top: 4px; }

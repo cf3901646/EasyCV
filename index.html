@@ -390,6 +390,46 @@
         <h2 id="share-error-title">无法打开分享链接</h2><p id="share-error-message"></p><p>本机简历未被替换。</p><form method="dialog"><button class="btn btn-primary" autofocus>返回本机简历</button></form>
     </dialog>
     <dialog id="confirm-dialog" class="share-dialog no-print" aria-labelledby="confirm-title" aria-describedby="confirm-description"><h2 id="confirm-title"></h2><p id="confirm-description"></p><form method="dialog" class="dialog-actions"><button class="btn btn-secondary" value="cancel" autofocus>取消</button><button class="btn btn-danger" value="confirm">删除板块</button></form></dialog>
+    <dialog id="pdf-guide-dialog" class="share-dialog pdf-guide-dialog no-print" aria-labelledby="pdf-guide-title">
+        <div class="share-dialog-header">
+            <h2 id="pdf-guide-title">导出 PDF 最佳打印设置</h2>
+            <button type="button" id="close-pdf-guide-dialog" class="share-close icon-close" aria-label="关闭导出提示"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
+        </div>
+        <p class="pdf-guide-lead">为确保导出的 PDF 与编辑界面 100% 绝对一致，请在系统打印预览面板中确认：</p>
+        <div class="pdf-guide-steps">
+            <div class="pdf-guide-step">
+                <div class="pdf-step-num">1</div>
+                <div class="pdf-step-body">
+                    <strong>目标打印机</strong>
+                    <span>选择【另存为 PDF】</span>
+                </div>
+            </div>
+            <div class="pdf-guide-step highlight-step">
+                <div class="pdf-step-num">2</div>
+                <div class="pdf-step-body">
+                    <strong>边距（最关键）</strong>
+                    <span>必须选择【无】（若保留默认边距，浏览器会缩小页面导致排版变形与错位）</span>
+                </div>
+            </div>
+            <div class="pdf-guide-step">
+                <div class="pdf-step-num">3</div>
+                <div class="pdf-step-body">
+                    <strong>选项设置</strong>
+                    <span>勾选【背景图形】（保留底色与主题色），取消勾选【页眉和页脚】</span>
+                </div>
+            </div>
+        </div>
+        <div class="pdf-guide-footer">
+            <label class="pdf-guide-skip-label">
+                <input type="checkbox" id="skip-pdf-guide-checkbox">
+                <span>下次直接打印，不再显示此提示</span>
+            </label>
+            <div class="share-dialog-actions" style="margin-top:0">
+                <button type="button" class="btn btn-secondary" id="cancel-pdf-guide">取消</button>
+                <button type="button" class="btn btn-primary" id="confirm-pdf-guide"><i class="fa-solid fa-print"></i> 开始打印</button>
+            </div>
+        </div>
+    </dialog>
     <script src="controls.js"></script>
     <script src="design.js"></script>
     <script src="share.js"></script>
