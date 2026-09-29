@@ -57,10 +57,13 @@ test('in-place editing on resume canvas synchronizes to sidebar form and storage
     await expect(wechatInput).toHaveValue('');
 });
 
-test('wechat works across templates and respects contact icon toggle', async ({ page }) => {
+test('wechat works across all 9 templates and respects contact icon toggle', async ({ page }) => {
     await page.locator('#info-wechat').fill('wx_developer_pro');
 
-    const templates = ['tpl-classic', 'tpl-split', 'tpl-academic', 'tpl-card', 'tpl-modern'];
+    const templates = [
+        'tpl-classic', 'tpl-split', 'tpl-academic', 'tpl-minimal',
+        'tpl-editorial', 'tpl-studio', 'tpl-timeline', 'tpl-card', 'tpl-banner'
+    ];
     for (const tpl of templates) {
         await page.locator('[data-tab="style-tab"]').click();
         await page.locator(`[data-tpl="${tpl}"]`).click();
@@ -70,12 +73,14 @@ test('wechat works across templates and respects contact icon toggle', async ({ 
 
     // 测试隐藏联系方式图标
     await page.locator('[data-tab="layout-tab"]').click();
-    const hideIconsBtn = page.locator('#contact-icons-trigger');
-    if (await hideIconsBtn.isVisible()) {
-        await hideIconsBtn.click();
-        await page.getByRole('option', { name: '隐藏', exact: true }).click();
-        await expect(page.locator('#resume-page .fa-weixin')).toBeHidden();
-    }
+    await page.locator('#contact-icons-trigger').click();
+    await page.getByRole('option', { name: '隐藏', exact: true }).click();
+    await expect(page.locator('#resume-page .fa-weixin')).toBeHidden();
+
+    // 重新开启图标
+    await page.locator('#contact-icons-trigger').click();
+    await page.getByRole('option', { name: '显示', exact: true }).click();
+    await expect(page.locator('#resume-page .fa-weixin')).toBeVisible();
 });
 
 test('wechat persists across page reload, JSON import/export and URL sharing', async ({ page, browser }) => {
@@ -116,6 +121,53 @@ test('wechat persists across page reload, JSON import/export and URL sharing', a
     const recipientData = await recipient.evaluate(() => resumeApp.getData());
     expect(recipientData.info.wechat).toBe('wx_imported_new');
     await recipient.close();
+});
+
+test('wechat supports long strings in split layout and Chinese/special characters', async ({ page }) => {
+    // 切换到双栏窄边栏模板 tpl-split
+    await page.locator('[data-tab="style-tab"]').click();
+    await page.locator('[data-tpl="tpl-split"]').click();
+
+    // 填入中英文混排、含括号的微信号
+    await page.locator('[data-tab="content-tab"]').click();
+    const mixedWechat = 'wx_test_888 (同手机号)';
+    await page.locator('#info-wechat').fill(mixedWechat);
+    await expect(page.locator('#resume-page [data-edit-path="info.wechat"]')).toHaveText(mixedWechat);
+
+    // 填入超长微信号，确保不溢出容器、正常渲染
+    const longWechat = 'wxid_very_long_custom_wechat_identifier_1234567890';
+    await page.locator('#info-wechat').fill(longWechat);
+    const canvasEl = page.locator('#resume-page [data-edit-path="info.wechat"]');
+    await expect(canvasEl).toHaveText(longWechat);
+    const box = await canvasEl.boundingBox();
+    expect(box.width).toBeGreaterThan(0);
+});
+
+test('legacy easycv_resume_state in localStorage hydrates cleanly without wechat', async ({ page }) => {
+    // 模拟仅存在旧版 easycv_resume_state 缓存的场景
+    await page.evaluate(() => {
+        localStorage.clear();
+        localStorage.setItem('easycv_resume_state', JSON.stringify({
+            info: {
+                name: '历史老用户',
+                title: '前端工程师',
+                email: 'old@example.com',
+                phone: '139-0000-0000',
+                location: '深圳',
+                github: 'github.com/old',
+                blog: 'old.me',
+                summary: '五年老员工'
+            }
+        }));
+    });
+    await page.reload();
+
+    await expect(page.locator('#info-name')).toHaveValue('历史老用户');
+    await expect(page.locator('#info-wechat')).toHaveValue('');
+    await expect(page.locator('#resume-page .fa-weixin')).toHaveCount(0);
+
+    const data = await page.evaluate(() => resumeApp.getData());
+    expect(data.info.wechat).toBe('');
 });
 
 test('wechat field safely escapes malicious HTML', async ({ page }) => {

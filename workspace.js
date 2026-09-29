@@ -66,7 +66,7 @@ function normalizeResume(data, baseSettings = state.settings || {}) {
     for (const key of ['sectionOrder','hiddenSections','sidebarSections']) settings[key] = sectionKeys(settings[key]).join(',');
     for (const [,key,,min,max] of SLIDER_SPECS) settings[key] = Math.min(max, Math.max(min, settings[key]));
     return {
-        info: strings(data.info, ['name', 'title', 'email', 'phone', 'location', 'wechat', 'github', 'blog', 'summary']),
+        info: strings(data.info, ['name', 'title', 'email', 'phone', 'wechat', 'location', 'github', 'blog', 'summary']),
         skills: list(data.skills, 'skills', item => strings(item, ['category', 'tags'])),
         work: list(data.work, 'work', experience(['company', 'role', 'time'])),
         projects: list(data.projects, 'projects', experience(['name', 'tech', 'time'])),

@@ -19,8 +19,8 @@ const SAMPLE_RESUME_DATA = {
         title: "高级软件开发工程师 / 技术经理",
         email: "zhangsan@example.com",
         phone: "138-8888-8888",
-        location: "北京 / 上海",
         wechat: "",
+        location: "北京 / 上海",
         github: "github.com/zhangsan",
         blog: "zhangsan.dev",
         summary: "具备 5 年以上核心系统开发与团队管理经验，精通多门主流开发语言与高并发分布式架构设计。曾在知名互联网公司主导多项核心业务系统重构，有效降低系统故障率，提升研发团队能效。作为一名热衷开源与自驱的技术人，乐于用工程手段解决实际问题，创造真实业务价值。"
@@ -175,16 +175,7 @@ function loadSharedContent() {
     if (oldState) {
         try {
             const parsed = JSON.parse(oldState);
-            if (parsed.info) {
-                return {
-                    info: parsed.info,
-                    skills: parsed.skills || [],
-                    work: parsed.work || [],
-                    projects: parsed.projects || [],
-                    education: parsed.education || [],
-                    custom: parsed.custom || []
-                };
-            }
+            if (parsed.info) return normalizeResume(parsed);
         } catch (e) {}
     }
 
@@ -990,8 +981,8 @@ function renderResumeHTML() {
     const contacts = [
         state.info.email.trim() ? `<span><i class="fa-regular fa-envelope"></i> <span contenteditable="true" data-edit-path="info.email">${state.info.email}</span></span>` : '',
         state.info.phone.trim() ? `<span><i class="fa-solid fa-phone"></i> <span contenteditable="true" data-edit-path="info.phone">${state.info.phone}</span></span>` : '',
-        state.info.location.trim() ? `<span><i class="fa-solid fa-location-dot"></i> <span contenteditable="true" data-edit-path="info.location">${state.info.location}</span></span>` : '',
         (state.info.wechat && state.info.wechat.trim()) ? `<span><i class="fa-brands fa-weixin"></i> <span contenteditable="true" data-edit-path="info.wechat">${state.info.wechat}</span></span>` : '',
+        state.info.location.trim() ? `<span><i class="fa-solid fa-location-dot"></i> <span contenteditable="true" data-edit-path="info.location">${state.info.location}</span></span>` : '',
         state.info.github.trim() ? `<span><i class="fa-brands fa-github"></i> <a href="${safeResumeURL(state.info.github)}" target="_blank" rel="noopener noreferrer"><span contenteditable="true" data-edit-path="info.github">${state.info.github}</span></a></span>` : '',
         state.info.blog.trim() ? `<span><i class="fa-solid fa-globe"></i> <a href="${safeResumeURL(state.info.blog)}" target="_blank" rel="noopener noreferrer"><span contenteditable="true" data-edit-path="info.blog">${state.info.blog}</span></a></span>` : ''
     ].filter(Boolean).join('');
@@ -1571,8 +1562,8 @@ function copyAIPromptToClipboard() {
         "title": "【求职意向 / 岗位名称】",
         "email": "【电子邮箱地址】",
         "phone": "【联系电话号码】",
-        "location": "【意向城市 / 居住地】",
         "wechat": "【微信号（选填，若无则留空）】",
+        "location": "【意向城市 / 居住地】",
         "github": "【GitHub 地址（选填，若无则留空）】",
         "blog": "【个人博客/作品集（选填，若无则留空）】",
         "summary": "【专业总结，简明扼要突出核心技术年限与显性业绩成果，用 <strong> 标签包裹重点词】"
@@ -2047,8 +2038,8 @@ async function runAICopilot() {
     "title": "求职意向/岗位",
     "email": "邮箱",
     "phone": "电话",
-    "location": "意向城市",
     "wechat": "微信号(选填)",
+    "location": "意向城市",
     "github": "GitHub(选填)",
     "blog": "博客/作品集(选填)",
     "summary": "专业总结（重点词用 <strong> 包裹）"
