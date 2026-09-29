@@ -177,3 +177,77 @@ test('wechat field safely escapes malicious HTML', async ({ page }) => {
     await expect(page.locator('#resume-page script, #resume-page img')).toHaveCount(0);
     expect(await page.evaluate(() => window.xss)).toBeUndefined();
 });
+
+test('wechat renders and toggles properly under print emulation', async ({ page }) => {
+    await page.locator('#info-wechat').fill('wx_print_test');
+    await expect(page.locator('#resume-page .fa-weixin')).toHaveCount(1);
+
+    // 1. 打印样式模拟下微信图标和文字正常保留
+    await page.emulateMedia({ media: 'print' });
+    await expect(page.locator('#resume-page .fa-weixin')).toBeVisible();
+    await expect(page.locator('#resume-page [data-edit-path="info.wechat"]')).toHaveText('wx_print_test');
+
+    // 2. 隐藏联系方式图标在打印样式下同步生效
+    await page.emulateMedia({ media: 'screen' });
+    await page.locator('[data-tab="layout-tab"]').click();
+    await page.locator('#contact-icons-trigger').click();
+    await page.getByRole('option', { name: '隐藏', exact: true }).click();
+
+    await page.emulateMedia({ media: 'print' });
+    await expect(page.locator('#resume-page .fa-weixin')).toBeHidden();
+    await expect(page.locator('#resume-page [data-edit-path="info.wechat"]')).toHaveText('wx_print_test');
+
+    // 3. 恢复显示并在清空后验证打印下完全移除
+    await page.emulateMedia({ media: 'screen' });
+    await page.locator('#contact-icons-trigger').click();
+    await page.getByRole('option', { name: '显示', exact: true }).click();
+    await page.locator('[data-tab="content-tab"]').click();
+    await page.locator('#info-wechat').fill('');
+
+    await page.emulateMedia({ media: 'print' });
+    await expect(page.locator('#resume-page .fa-weixin')).toHaveCount(0);
+    await expect(page.locator('#resume-page [data-edit-path="info.wechat"]')).toHaveCount(0);
+    await page.emulateMedia({ media: 'screen' });
+});
+
+test('wechat is shared between scheme A and scheme B', async ({ page }) => {
+    await page.locator('#info-wechat').fill('wx_shared_scheme');
+    await expect(page.locator('#resume-page .fa-weixin')).toHaveCount(1);
+
+    // 切换到方案 B
+    await page.locator('#btn-view-example').click();
+    await expect(page.locator('#info-wechat')).toHaveValue('wx_shared_scheme');
+    await expect(page.locator('#resume-page [data-edit-path="info.wechat"]')).toHaveText('wx_shared_scheme');
+
+    // 切换回方案 A
+    await page.locator('#btn-view-user').click();
+    await expect(page.locator('#info-wechat')).toHaveValue('wx_shared_scheme');
+    await expect(page.locator('#resume-page [data-edit-path="info.wechat"]')).toHaveText('wx_shared_scheme');
+});
+
+test('wechat field is accessible and live updates on mobile viewports', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const wechatInput = page.locator('#info-wechat');
+    await expect(wechatInput).toBeVisible();
+
+    await wechatInput.fill('wx_mobile_lead');
+
+    // 切换到移动端预览
+    await page.locator('[data-workspace-view="preview"]').click();
+    await expect(page.locator('#resume-page')).toBeVisible();
+    await expect(page.locator('#resume-page .fa-weixin')).toBeVisible();
+    await expect(page.locator('#resume-page [data-edit-path="info.wechat"]')).toHaveText('wx_mobile_lead');
+
+    // 切换回移动端编辑
+    await page.locator('[data-workspace-view="edit"]').click();
+    await expect(wechatInput).toHaveValue('wx_mobile_lead');
+});
+
+test('editing wechat never mutates SAMPLE_RESUME_DATA in memory', async ({ page }) => {
+    const initialSampleWechat = await page.evaluate(() => SAMPLE_RESUME_DATA.info.wechat);
+    expect(initialSampleWechat).toBe('');
+
+    await page.locator('#info-wechat').fill('wx_immutable_check');
+    const mutatedOrNot = await page.evaluate(() => SAMPLE_RESUME_DATA.info.wechat);
+    expect(mutatedOrNot).toBe('');
+});

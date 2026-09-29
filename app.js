@@ -179,14 +179,7 @@ function loadSharedContent() {
         } catch (e) {}
     }
 
-    return {
-        info: SAMPLE_RESUME_DATA.info,
-        skills: SAMPLE_RESUME_DATA.skills,
-        work: SAMPLE_RESUME_DATA.work,
-        projects: SAMPLE_RESUME_DATA.projects,
-        education: SAMPLE_RESUME_DATA.education,
-        custom: SAMPLE_RESUME_DATA.custom
-    };
+    return normalizeResume(SAMPLE_RESUME_DATA);
 }
 
 // 加载指定方案的排版设置
