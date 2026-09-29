@@ -20,6 +20,7 @@ const SAMPLE_RESUME_DATA = {
         email: "zhangsan@example.com",
         phone: "138-8888-8888",
         location: "北京 / 上海",
+        wechat: "",
         github: "github.com/zhangsan",
         blog: "zhangsan.dev",
         summary: "具备 5 年以上核心系统开发与团队管理经验，精通多门主流开发语言与高并发分布式架构设计。曾在知名互联网公司主导多项核心业务系统重构，有效降低系统故障率，提升研发团队能效。作为一名热衷开源与自驱的技术人，乐于用工程手段解决实际问题，创造真实业务价值。"
@@ -292,7 +293,7 @@ function initApp() {
 
             // 实时同步右侧 A4 画布的对应节点，避免触发 renderAll 丢失光标！
             const editableNode = document.querySelector(`[data-edit-path="${path}"]`);
-            if (['info.email', 'info.phone', 'info.location', 'info.github', 'info.blog'].includes(path)) {
+            if (['info.email', 'info.phone', 'info.location', 'info.wechat', 'info.github', 'info.blog'].includes(path)) {
                 // 联系方式的图标、链接和文字是一个整体，空值时全部移除。
                 renderResumeHTML();
             } else if (editableNode) {
@@ -990,6 +991,7 @@ function renderResumeHTML() {
         state.info.email.trim() ? `<span><i class="fa-regular fa-envelope"></i> <span contenteditable="true" data-edit-path="info.email">${state.info.email}</span></span>` : '',
         state.info.phone.trim() ? `<span><i class="fa-solid fa-phone"></i> <span contenteditable="true" data-edit-path="info.phone">${state.info.phone}</span></span>` : '',
         state.info.location.trim() ? `<span><i class="fa-solid fa-location-dot"></i> <span contenteditable="true" data-edit-path="info.location">${state.info.location}</span></span>` : '',
+        (state.info.wechat && state.info.wechat.trim()) ? `<span><i class="fa-brands fa-weixin"></i> <span contenteditable="true" data-edit-path="info.wechat">${state.info.wechat}</span></span>` : '',
         state.info.github.trim() ? `<span><i class="fa-brands fa-github"></i> <a href="${safeResumeURL(state.info.github)}" target="_blank" rel="noopener noreferrer"><span contenteditable="true" data-edit-path="info.github">${state.info.github}</span></a></span>` : '',
         state.info.blog.trim() ? `<span><i class="fa-solid fa-globe"></i> <a href="${safeResumeURL(state.info.blog)}" target="_blank" rel="noopener noreferrer"><span contenteditable="true" data-edit-path="info.blog">${state.info.blog}</span></a></span>` : ''
     ].filter(Boolean).join('');
@@ -1382,7 +1384,7 @@ function initVisualEditor() {
 
         // 5. 实时同步 JSON 代码域
         updateJSONCodearea();
-        if (['info.email', 'info.phone', 'info.location', 'info.github', 'info.blog'].includes(path) && !newText.trim()) {
+        if (['info.email', 'info.phone', 'info.location', 'info.wechat', 'info.github', 'info.blog'].includes(path) && !newText.trim()) {
             const contacts = e.target.closest('.header-contact-list');
             e.target.closest('.header-contact-list > span')?.remove();
             if (contacts && !contacts.children.length) contacts.remove();
@@ -1570,6 +1572,7 @@ function copyAIPromptToClipboard() {
         "email": "【电子邮箱地址】",
         "phone": "【联系电话号码】",
         "location": "【意向城市 / 居住地】",
+        "wechat": "【微信号（选填，若无则留空）】",
         "github": "【GitHub 地址（选填，若无则留空）】",
         "blog": "【个人博客/作品集（选填，若无则留空）】",
         "summary": "【专业总结，简明扼要突出核心技术年限与显性业绩成果，用 <strong> 标签包裹重点词】"
@@ -2045,6 +2048,7 @@ async function runAICopilot() {
     "email": "邮箱",
     "phone": "电话",
     "location": "意向城市",
+    "wechat": "微信号(选填)",
     "github": "GitHub(选填)",
     "blog": "博客/作品集(选填)",
     "summary": "专业总结（重点词用 <strong> 包裹）"
