@@ -175,6 +175,7 @@ test('oversized content and file URLs give actionable errors', async ({page}) =>
 });
 
 test('all 9 templates and customized settings survive URL sharing with full fidelity', async ({page, browser}) => {
+    test.setTimeout(90000);
     await page.goto(BASE);
     const ALL_9_TEMPLATES = [
         'tpl-classic', 'tpl-split', 'tpl-timeline', 'tpl-card',

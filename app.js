@@ -1581,9 +1581,13 @@ function updatePaginationGuides(sheet, scale) {
     const pixelsPerMM = 96 / 25.4;
     const paddingY = (state.settings?.paddingY ?? 12) * pixelsPerMM;
     const printableHeight = 297 * pixelsPerMM - 2 * paddingY;
-    // The continuous preview has one pair of margins; each printed page has its own.
-    // Allow 2px for CSS mm rounding. Print-time break avoidance can move content further.
-    const pages = Math.max(1, Math.ceil((sheet.scrollHeight - 2 * paddingY - 2) / printableHeight));
+    const a4Height = 297 * pixelsPerMM;
+    // For single page: sheet.scrollHeight cannot exceed Math.ceil(a4Height) without overflowing page 1.
+    // For multi-page: each extra page provides printableHeight of space.
+    // Allow 1px for browser subpixel integer rounding of scrollHeight.
+    const pages = sheet.scrollHeight <= Math.ceil(a4Height)
+        ? 1
+        : 1 + Math.max(1, Math.ceil((sheet.scrollHeight - a4Height - 1) / printableHeight));
     const status = document.getElementById('page-count');
     if (status) { status.textContent = `A4 · 约 ${pages} 页`; status.title = '页数为预览估算，以打印结果为准'; }
     sheet.dataset.pages = String(pages);

@@ -25,6 +25,8 @@
 .header-contact-list a:hover { text-decoration:underline; }
 .resume-sheet[data-contact-icons=hide] .header-contact-list i { display:none; }
 .resume-section { margin-bottom:var(--section-margin); }
+.resume-section:last-child { margin-bottom:0; }
+.split-sidebar > .resume-section:last-child, .split-main > .resume-section:last-child { margin-bottom:0; }
 .resume-sheet h2.sec-title { color:var(--accent-color); font-size:var(--title-size); font-weight:var(--title-weight); margin-bottom:calc(var(--item-margin)*.8 + 3px); padding-bottom:3px; line-height:1.4; break-after:avoid; }
 .resume-item { margin-bottom:var(--item-margin); break-inside:avoid; }
 .resume-item:last-child { margin-bottom:0; }
